@@ -94,7 +94,7 @@ public abstract class DevintFrameListener extends JFrame implements KeyListener 
 			Preferences.getData().changeSize();
 		}
 		// F5 = voix suivante défini dans Preferences
-		if (e.getKeyCode() == KeyEvent.VK_F4) {
+		if (e.getKeyCode() == KeyEvent.VK_F5) {
 			Preferences.getData().changeVoice();
 		}
 
