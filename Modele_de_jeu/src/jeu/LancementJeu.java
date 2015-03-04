@@ -9,7 +9,7 @@ package jeu;
 public class LancementJeu{
 
     public static void main(String args[]){
-        new jeu.MenuJeu("Exemple de jeu");
+        new jeu.MenuJeu("PolyCards");
     }
 
 }
