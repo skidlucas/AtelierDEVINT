@@ -1,13 +1,19 @@
 package jeu;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /** Cette classe est un exemple d'interface de jeu.
  *  Elle étend DevintFrame pour avoir un Frame et réagir aux évênements claviers
@@ -20,15 +26,10 @@ import java.awt.event.*;
 
 public class JeuSolo extends FenetreAbstraite implements ActionListener{
 
-	// le bouton pour la question
-	// est une variable d'instance car il doit être accessible 
-	// dans la méthode actionPerformed 
-	private JButton bouton;
-	
-	// un label
-	// est une variable d'instance car il doit être accessible 
-	// dans la méthode changeColor, qui gère les préférences
-	private JTextArea lb1;
+	private JComboBox themesList, difficultesList;
+    private JLabel theme, difficulte;
+    private JButton bouton;
+    private JPanel jp1, jp2, jp3;
 	
 	// appel au constructeur de la classe mère
     public JeuSolo(String title) {
@@ -52,60 +53,77 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
 
     // définition de la méthode abstraite "init()"
     // initialise le frame 
-    protected void init() {
-    	// BorderLayout, voir http://java.sun.com/docs/books/tutorial/uiswing/layout/border.html
-    	setLayout(new BorderLayout());
-     	// premier label
-    	// ce label est géré par les préférences (cf méthode changeColor)
-    	String text = "Dans cet exemple, on a ajouté un bouton à la fenêtre abstraite et on a ";
-    	text += "associé une action à la touche F5.\n";
-    	text += "La touche F3 permet de changer les couleurs, et la touche F4 la voix ";
-    	text+= "de la synthèse vocale\n";
-    	text+="\n\nRegardez le code source dans jeu.Jeu.java";
-     	lb1 = new JTextArea (text); 
-    	lb1.setLineWrap(true);
-    	lb1.setEditable(false);
-    	lb1.setFont(new Font("Georgia",1,30));
-    	// on récupère les couleurs de base dans la classe Preferences 
-		Preferences pref = Preferences.getData();
-		Color foregroundColor = pref.getCurrentForegroundColor();
-		Color backgroundColor = pref.getCurrentBackgroundColor();
-		lb1.setBackground(backgroundColor);
-		lb1.setForeground(foregroundColor);
-    	
-    	// on place le premier composant en haut
-    	this.add(lb1,BorderLayout.NORTH);
+    protected void init() {// on récupère les couleurs de base dans la classe Preferences
+        bouton = new JButton("Commencer");
+        Preferences pref = Preferences.getData();
+        Color foregroundColor = pref.getCurrentForegroundColor();
+        Color backgroundColor = pref.getCurrentBackgroundColor();
 
-    	// deuxième label, qui n'est pas géré par les préférences
-       	text = "Exemple de JLabel\n";
-       	text += "\n\nEn plus des touches héritées de \"FenetreAbstraite\"\n";
-       	text += "on a spécialisé la touche F5. TAPEZ F5";
-    	JTextArea lb2 = new JTextArea (text);
-    	lb2.setLineWrap(true);
-    	lb2.setEditable(false);
-    	lb2.setFont(new Font("Georgia",1,30));
-    	// on met un contour gris foncé
-       	lb2.setBorder(new LineBorder(Color.GRAY,5));
-       	// on met un fond noir
-    	lb2.setBackground(Color.BLACK);
-    	// le composant doit être opaque pour qu'on voit le fond
-       	lb2.setOpaque(true);
-    	// on écrit en blanc
-       	lb2.setForeground(Color.WHITE);  	
-       	// on place ce composant au centre
-       	this.add(lb2,BorderLayout.CENTER);
+    	setLayout(new GridLayout(3, 0));
 
-    	// bouton pour poser une question
-    	bouton = new JButton();
-    	bouton.setText("Cliquez sur ce bouton");
-    	bouton.setBackground(new Color(50,50,255));
-    	bouton.setBorder(new LineBorder(Color.BLACK,10));
-     	bouton.setFont(new Font("Georgia",1,40));
-     	// c'est l'objet Jeu lui-même qui réagit au clic souris
-       	bouton.addActionListener(this);
-    	// on met le bouton à droite
-     	this.add(bouton,BorderLayout.EAST);
-   }
+
+        jp1 = new JPanel();
+        jp1.setLayout(new GridLayout(2, 2));
+        jp1.setBackground(backgroundColor);
+
+        jp2 = new JPanel();
+        jp2.setLayout(new BorderLayout());
+        jp2.setBackground(backgroundColor);
+
+        jp3 = new JPanel();
+        jp3.setLayout(new FlowLayout());
+        jp3.setBackground(backgroundColor);
+
+
+        String[] themes = {"Animaux", "Fruits", "Caractères chinois" };
+        themesList = new JComboBox(themes);
+        themesList.setSelectedIndex(0);
+    	themesList.setEditable(false);
+    	themesList.setFont(new Font("Georgia",1,30));
+		themesList.setBackground(backgroundColor);
+		themesList.setForeground(foregroundColor);
+        themesList.addActionListener(this);
+
+        String[] difficultes = {"Facile", "Moyen", "Difficile"};
+        difficultesList = new JComboBox(difficultes);
+        difficultesList.setSelectedIndex(0);
+        difficultesList.setEditable(false);
+        difficultesList.setFont(new Font("Georgia",1,30));
+        difficultesList.setBackground(backgroundColor);
+        difficultesList.setForeground(foregroundColor);
+        difficultesList.addActionListener(this);
+
+        theme = new JLabel("Thème");
+        theme.setFont(new Font("Georgia", Font.BOLD, 30));
+        theme.setForeground(foregroundColor);
+
+        difficulte = new JLabel("Difficulté");
+        difficulte.setFont(new Font("Georgia", Font.BOLD, 30));
+        difficulte.setForeground(foregroundColor);
+
+        bouton.setBackground(new Color(50, 50, 255));
+        bouton.setBorder(new LineBorder(Color.BLACK, 10));
+        bouton.setFont(new Font("Georgia", 1, 40));
+        bouton.addActionListener(this);
+
+        jp1.add(theme);
+        jp1.add(themesList);
+        jp1.add(difficulte);
+        jp1.add(difficultesList);
+        this.add(jp1);
+        BufferedImage myPicture = null;
+        try {
+            myPicture = ImageIO.read(new File("C:\\Users\\user\\Downloads\\ZmKRg0G.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+        add(picLabel);
+        jp3.add(picLabel);
+        this.add(jp3);
+        jp2.add(bouton, BorderLayout.SOUTH);
+        this.add(jp2);
+    }
 
     // lire la question si clic sur le bouton 
     public void actionPerformed(ActionEvent ae){
@@ -144,9 +162,20 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
 	public  void changeColor() {
     	// on récupère les couleurs de base dans la classe Preferences 
 		Preferences pref = Preferences.getData();
-		lb1.setBackground(pref.getCurrentBackgroundColor());
-		lb1.setForeground(pref.getCurrentForegroundColor());
-	}
+		themesList.setBackground(pref.getCurrentBackgroundColor());
+		themesList.setForeground(pref.getCurrentForegroundColor());
+        difficultesList.setBackground(pref.getCurrentBackgroundColor());
+        difficultesList.setForeground(pref.getCurrentForegroundColor());
+        jp1.setBackground(pref.getCurrentBackgroundColor());
+        jp1.setForeground(pref.getCurrentForegroundColor());
+        jp2.setBackground(pref.getCurrentBackgroundColor());
+        jp2.setForeground(pref.getCurrentForegroundColor());
+        jp3.setBackground(pref.getCurrentBackgroundColor());
+        jp3.setForeground(pref.getCurrentForegroundColor());
+        theme.setForeground(pref.getCurrentForegroundColor());
+        difficulte.setForeground(pref.getCurrentForegroundColor());
+
+    }
 	
 	
 	/**
@@ -154,7 +183,10 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
 	 */
 	public void changeSize(){
 		Font f = Preferences.getData().getCurrentFont();
-		lb1.setFont(f);
+		themesList.setFont(f);
+        difficultesList.setFont(f);
+        theme.setFont(f);
+        difficulte.setFont(f);
 	}
 
 }
