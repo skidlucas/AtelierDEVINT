@@ -1,4 +1,4 @@
-package jeu;
+package jeu.view;
 
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;

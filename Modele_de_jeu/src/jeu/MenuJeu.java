@@ -32,8 +32,8 @@ public class MenuJeu extends MenuAbstrait {
 	 */
 	protected void lancerOption(int i) {
 		switch (i){
-            case 0 : new Jeu(nomJeu);break;
-            case 1 : new Jeu(nomJeu);break;
+            case 0 : new JeuSolo(nomJeu);break;
+            case 1 : new JeuSolo(nomJeu);break;
             case 2 : new GestionSon("Options");break;
             case 3 : new FichierScore("Scores");break;
             case 4 : System.exit(0);

@@ -18,7 +18,7 @@ import java.awt.event.*;
  *
  */
 
-public class Jeu extends FenetreAbstraite implements ActionListener{
+public class JeuSolo extends FenetreAbstraite implements ActionListener{
 
 	// le bouton pour la question
 	// est une variable d'instance car il doit être accessible 
@@ -31,7 +31,7 @@ public class Jeu extends FenetreAbstraite implements ActionListener{
 	private JTextArea lb1;
 	
 	// appel au constructeur de la classe mère
-    public Jeu(String title) {
+    public JeuSolo(String title) {
     	super(title);
      }
     
