@@ -1,15 +1,21 @@
 package jeu;
 
-/** classe pour lancer le jeu
- * Elle crée simplement une instance de MenuJeu
- * 
- * @author helene
- *
+import javax.swing.JFrame;
+
+/**
+ * Main class of the application.
  */
-public class LancementJeu{
+public class LancementJeu {
 
-    public static void main(String args[]){
-        new jeu.MenuJeu("PolyCards");
+    /**
+     * Used to start the game.
+     * 
+     * @param args
+     */
+    public static void main(String args[]) {
+
+        jeu.MenuJeu fenetre;
+        fenetre = new jeu.MenuJeu();
+        fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-
 }

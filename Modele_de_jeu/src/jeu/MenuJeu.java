@@ -1,55 +1,104 @@
-/*  Classe de menu de lancement de l'exemple de jeu.
- *  Cette classe hérite de la classe abstraite MenuAbstrait en définissant les méthodes :
- *     - nomOptions qui renvoie la liste des options possibles pour le menu 
- *     - lancerOption qui associe une action à chaque option du menu
- *     - wavAccueil() qui renvoie le nom du fichier wav lu lors de l'accueil dans le menu
- *     - wavAide() qui renvoie le nom du fichier wav lu lors de l'activation de la touche F1
- */
-
-package jeu; 
+package jeu;
 
 import devintAPI.MenuAbstrait;
 
+/**
+ * This class provides an implementation of the abstract
+ * <code>MenuAbstrait</code> displaying a memory game.
+ */
 public class MenuJeu extends MenuAbstrait {
 
-	/** constructeur
-	 * @param title : le nom du jeu 
-	 */
-	public MenuJeu(String title) {
-		super(title);
-	}
+    /** Exit option. */
+    private static final String EXIT = "Quitter";
 
-	/** renvoie le nom des options du menu
-     * vous pouvez définir autant d'options que vous voulez
-     **/
-	protected String[] nomOptions() {
-		String[] noms = {"Jeu Solo","Jeu en Multi","Options","Scores", "Quitter"};
-		return noms;
-	}
+    /** The help .wav path. */
+    private static final String HELP_PATH = "../ressources/aideF1.wav";
 
-	/** lance l'action associée au bouton
-	 * la numérotation est celle du tableau renvoyé par nomOption
-	 */
-	protected void lancerOption(int i) {
-		switch (i){
-            case 0 : new JeuSolo(nomJeu);break;
-            case 1 : new JeuSolo(nomJeu);break;
-            case 2 : new GestionSon("Options");break;
-            case 3 : new FichierScore("Scores");break;
-            case 4 : System.exit(0);
-		default: System.err.println("action non définie");
-		}
-	} 
+    /** The help .wav path. */
+    private static final String HELP_PATH_2 = "../ressources/aideF2.wav";
+    
+    /** Tutorial option. */
+    private static final String TUTORIAL = "Tutoriel";
 
-	// renvoie le fichier wave contenant le message d'accueil
-	// ces fichiers doivent être placés dans ressources/sons/
-	protected  String wavAccueil() {
-		return "../ressources/sons/accueil.wav";
-	}
+    /** Start option. */
+    private static final String PLAY = "Jouer";
 
-	// renvoie le fichier wave contenant la règle du jeu
-	protected  String wavRegleJeu() {
-		return "../ressources/sons/accueil.wav";
-	}
-	
+    /** Scores option. */
+    private static final String SCORES = "Scores";
+
+    /** The UID. */
+    private static final long serialVersionUID = 7045671832542814865L;
+
+    /** The application title. */
+    private static final String TITLE = "Memory Card";
+
+    /** Warning message. */
+    private static final String UNDEFINED_ACTION = "Action non d�finie.";
+
+    /** Relative path for the help .wav file. */
+    private static final String WELCOMING_PATH = "../ressources/accueil.wav";
+
+    /**
+     * Constructor.
+     */
+    public MenuJeu() {
+        super(TITLE);
+    }
+
+    /**
+     * Inherited method.
+     * 
+     * @see devintAPI.MenuAbstrait#lancerOption(int)
+     */
+    protected void lancerOption(int i) {
+        switch (i) {
+        case 0:
+            new JeuInterfaceBis(nomJeu);
+            break;
+        case 1:
+            new OptionInterface(nomJeu);
+            break;
+        case 2:
+            System.exit(0);
+        default:
+            System.err.println(UNDEFINED_ACTION);
+        }
+    }
+
+    /**
+     * Inherited method.
+     * 
+     * @see devintAPI.MenuAbstrait#nomOptions()
+     */
+    protected String[] nomOptions() {
+        String[] noms = { PLAY, TUTORIAL, EXIT };
+        return noms;
+    }
+
+    /**
+     * Inherited method.
+     * 
+     * @see devintAPI.MenuAbstrait#wavAccueil()
+     */
+    protected String wavAccueil() {
+        return WELCOMING_PATH;
+    }
+
+    /**
+     * Inherited method.
+     * 
+     * @see devintAPI.MenuAbstrait#wavAide()
+     */
+    protected String wavAide() {
+        return HELP_PATH;
+    }
+
+    /**
+     * Inherited method.
+     * 
+     * @see devintAPI.MenuAbstrait#wavAide()
+     */
+    protected String wavAide2() {
+        return HELP_PATH_2;
+    }
 }

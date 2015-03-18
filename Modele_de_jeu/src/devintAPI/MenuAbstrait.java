@@ -1,21 +1,9 @@
-/** Une classe abstraite à utiliser pour le menu de lancement du jeu
- *  La classe de menu de votre jeu doit hériter de cette classe :
- *    - définir la méthode nomOptions qui renvoie un tableau de String qui corresponds aux 
- *    options possibles de votre menu
- *    - définir la méthode lancerOption(int i) qui associe des actions aux options de votre menu 
- *    - définir les méthodes wavAccueil et wavAide qui désignent le fichier wave à lire pour l'accueil
- *    et l'aide.
- *    
- *  Ne pas modifier cette classe
- *  @author helene
- */
-
 package devintAPI;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -23,310 +11,353 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 
 import t2s.SIVOXDevint;
 
-public abstract class MenuAbstrait extends DevintFrameListener implements
-		ActionListener {
+/**
+ * This abstract class provides a generic menu.
+ */
+public abstract class MenuAbstrait extends JFrame implements KeyListener,
+        ActionListener {
 
-	// -------------------------------------------------------
-	// les attributs
+    /** The default font. */
+    private static final String DEFAULT_FONT = "Tahoma";
 
-	// le nom du jeu
-	protected final String nomJeu;
+    /** Header font. */
+    private static final String HEADER_FONT = "Georgia";
 
-	// les noms des options
-	private String[] nomOptions;
+    /** The UID. */
+    private static final long serialVersionUID = 1871733154864975885L;
 
-	// les boutons associés aux options
-	private JButton[] boutonOption;
+    /** Option buttons. */
+    private JButton[] boutonOption;
 
-	// le nombre d'options
-	private int nbOption;
+    /** Color used for the buttons. */
+    protected Color couleurBouton;
 
-	// attributs des textes et des boutons
-	// à redéfinir dans la classe concrète si vous le souhaitez
-	// en gardant de forts contrastes et peu de couleurs différentes
-	protected Font fonteBouton;
-	protected Color foregroundColor;
-	protected Color backgroundColor;
+    /** Selection color used for the buttons. */
+    protected Color couleurBoutonSelectionne;
 
-	// l'option courante qui est sélectionnée
-	private int optionCourante;
+    /** Text color used for the buttons. */
+    protected Color couleurTexte;
 
-	// éléments de placement des composants
-	private GridBagLayout placement; // le layout
-	private GridBagConstraints regles; // les regles de placement
+    /** Text color used for selected buttons. */
+    protected Color couleurTexteSelectionne;
 
-	// éléments graphiques
-	protected JPanel entete;
-	protected JLabel lb1;
-	protected LineBorder buttonBorder;
-	protected LineBorder enteteBorder;
+    /** Font used for the buttons. */
+    protected Font fonteBouton;
 
-	// -------------------------------------------------
-	// les méthodes abstraites à définir par héritage
+    /** Options number. */
+    private int nbOption;
 
-	/**
-	 * renvoie le tableau contenant le nom des options méthode abstraite à
-	 * définir par héritage
-	 */
-	protected abstract String[] nomOptions();
+    /** Name of the game. */
+    protected final String nomJeu;
 
-	/**
-	 * lance l'action associée au bouton n°i méthode abstraite à définir par
-	 * héritage PRECOND : i varie entre 0 et le nombre d'options possibles moins
-	 * 1
-	 */
-	protected abstract void lancerOption(int i);
+    /** Names for options. */
+    private String[] nomOptions;
 
+    /** The currently selected option. */
+    private int optionCourante;
 
-	// -------------------------------------------------------
-	/**
-	 * constructeur,
-	 * 
-	 * @param title  : le nom du jeu
-	*/
-	public MenuAbstrait(String title) {
-		super(title);
-		nomJeu = title;
-		optionCourante = -1;
-		// méthode à rendre concrète par héritage
-		nomOptions = nomOptions(); 
-		nbOption = nomOptions.length;
-		// on récupère les préférences
-		Preferences pref = Preferences.getData();
-		foregroundColor = pref.getCurrentForegroundColor();
-		backgroundColor = pref.getCurrentBackgroundColor();
-		// créé les éléments de la fenêtre
-		creerLayout();
-		creerEntete();
-		creerOption(nomOptions);
-	     // visible
-    	this.setVisible(true);
-    	// a le focus
-    	this.requestFocus();
-		// lit le message d'accueil
-		voix.playWav(wavAccueil());
- 
-	}
+    /** The layout. */
+    private GridBagLayout placement;
 
-	// -------------------------------------------------------
-	// méthodes utilisées par le constructeur
+    /** The associated constraints. */
+    private GridBagConstraints regles;
 
-	/**
-	 * créé le layout pour placer les composants
-	 */
-	private void creerLayout() {
-		placement = new GridBagLayout();
-		regles = new GridBagConstraints();
-		setLayout(placement);
-		// par défaut on étire les composants horizontalement et verticalement
-		regles.fill = GridBagConstraints.HORIZONTAL;
-		// par défaut, tous les composants ont un poids de 1
-		// on les répartit donc équitablement sur la grille
-		regles.weightx = 1;
-		regles.weighty = 1;
-		// espaces au bord des composants
-		regles.insets = new Insets(10, 50, 10, 50);
-		// pour placer en haut des zones
-		regles.anchor = GridBagConstraints.NORTH;
-	}
+    /** The instance of <code>SIVOXDevint</code> used to manage vocal signs. */
+    private SIVOXDevint voix;
 
-	/**
-	 * créé l'entête avec le nom du jeu
-	 */
-	public void creerEntete() {
+    /**
+     * Constructor.
+     * 
+     * @param title
+     *            The displayed title for the application.
+     */
+    public MenuAbstrait(String title) {
+        super(title);
+        nomJeu = title;
+        optionCourante = -1;
+        nomOptions = nomOptions();
+        nbOption = nomOptions.length;
+        creerAttributs();
+        creerLayout();
+        creerEntete();
+        creerOption(nomOptions);
+        setExtendedState(Frame.MAXIMIZED_BOTH);
+        setVisible(true);
+        requestFocus();
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        addKeyListener(this);
+        voix = new SIVOXDevint();
+        voix.playWav(wavAccueil());
+    }
 
-		// panel d'entete de la fenêtre
-		entete = new JPanel();
-		FlowLayout enteteLayout = new FlowLayout();
-		enteteLayout.setAlignment(FlowLayout.CENTER);
-		entete.setLayout(enteteLayout);
-		enteteBorder = new LineBorder(Color.GRAY, 8);
-		entete.setBorder(enteteBorder);
+    /**
+     * Inherited method.
+     * 
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent ae) {
 
-		// le label
-		lb1 = new JLabel(nomJeu);
-		lb1.setFont(Preferences.getData().getCurrentFont());
-		lb1.setForeground(foregroundColor);
-		lb1.setBackground(backgroundColor);
-		entete.add(lb1);
+        // To activate the option when clicking on a button.
+        voix.stop();
+        Object source = ae.getSource();
+        for (int i = 0; i < nbOption; i++) {
+            if (source == boutonOption[i]) {
+                if (optionCourante != -1)
+                    unFocusedButton(optionCourante);
+                optionCourante = i;
+                setFocusedButton(optionCourante);
+                lancerOption(i);
+            }
+        }
+    }
 
-		// placement de l'entete en 1ère ligne, 1ère colonne
-		regles.gridx = 1;
-		regles.gridy = 1;
-		placement.setConstraints(entete, regles);
-		add(entete);
-	}
+    /**
+     * Creates attributes such as font or color.
+     */
+    protected void creerAttributs() {
 
-	/**
-	 * creer les boutons associés aux noms d'options
-	 */
-	private void creerOption(String[] noms) {
-		// création des boutons
-		// panel des boutons
-		JPanel boutons = new JPanel();
-		boutons.setLayout(new GridLayout(nbOption, 1));
-		// les boutons
-		fonteBouton = Preferences.getData().getCurrentFont();
-		buttonBorder = new LineBorder(Color.BLACK, 8);
-		boutonOption = new JButton[nbOption];
-		for (int i = 0; i < nbOption; i++) {
-			creerBouton(i, noms[i]);
-			boutons.add(boutonOption[i]);
-		}
+        // Text colors.
+        couleurTexte = Color.WHITE;
+        couleurTexteSelectionne = new Color(10, 0, 150);
 
-		// poids relatif de 4 (i.e 3 fois plus grand que l'entête)
-		regles.weighty = 4;
-		// placement des boutons
-		regles.gridx = 1;
-		regles.gridy = 2;
-		placement.setConstraints(boutons, regles);
-		add(boutons);
-	}
+        // Buttons attributes update.
+        fonteBouton = new Font(DEFAULT_FONT, 1, 56);
+        couleurBouton = couleurTexteSelectionne;
+        couleurBoutonSelectionne = couleurTexte;
+    }
 
-	// pour créer un bouton associé à un texte
-	private void creerBouton(int i, String texte) {
-		boutonOption[i] = new JButton();
-		boutonOption[i].setText(texte);
-		setPropertiesButton(boutonOption[i]);
-	}
+    /**
+     * Useful method to create a button associated with a text.
+     * 
+     * @param i
+     *            The index.
+     * @param texte
+     *            The displayed text.
+     */
+    private void creerBouton(int i, String texte) {
+        boutonOption[i] = new JButton();
+        boutonOption[i].setText(texte);
+        setPropertiesButton(boutonOption[i]);
+    }
 
-	// mettre à jour les propriétés des boutons
-	protected void setPropertiesButton(JButton b) {
-		b.setFocusable(false);
-		b.setBackground(foregroundColor);
-		b.setForeground(backgroundColor);
-		b.setFont(fonteBouton);
-		b.setBorder(buttonBorder);
-		b.addActionListener(this);
-	}
+    /**
+     * Creates header displaying the name of the game.
+     */
+    public void creerEntete() {
 
-	// -------------------------------------------------------
-	// méthodes pour réagir aux évènements clavier
+        // Header panel for the frame.
+        JPanel entete = new JPanel();
+        FlowLayout enteteLayout = new FlowLayout();
+        enteteLayout.setAlignment(FlowLayout.CENTER);
+        entete.setLayout(enteteLayout);
+        entete.setBorder(new LineBorder(Color.GRAY, 8));
 
+        // Title label.
+        JLabel lb1 = new JLabel(nomJeu);
+        lb1.setFont(new Font(HEADER_FONT, 1, 96));
+        lb1.setForeground(couleurTexteSelectionne);
+        lb1.setBackground(couleurBoutonSelectionne);
+        entete.add(lb1);
 
-	public void keyPressed(KeyEvent e) {
-		// gestion du son d'accueil, des touches F1, ESC, F3 et F4
-		// géré par DevintFrameListener
-		super.keyPressed(e);
-		// enter = sélectionner l'option
-		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			// méthode à rendre concrète par héritage
-			lancerOption(optionCourante);  
-		}
-		// se déplacer dans les options vers le bas
-		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			if (optionCourante == -1) {
-				optionCourante = 0;
-				setFocusedButton(optionCourante);
-			} else {
-				unFocusedButton(optionCourante);
-				optionCourante = (optionCourante + 1) % nbOption;
-				setFocusedButton(optionCourante);
-			}
-		}
-		// se déplacer dans les options vers le haut
-		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			if (optionCourante == -1) {
-				optionCourante = 0;
-				setFocusedButton(optionCourante);
-			} else {
-				unFocusedButton(optionCourante);
-				optionCourante = optionCourante - 1;
-				if (optionCourante == -1)
-					optionCourante = nbOption - 1;
-				setFocusedButton(optionCourante);
-			}
-		}
-	}
+        // Sets the header.
+        regles.gridx = 1;
+        regles.gridy = 1;
+        placement.setConstraints(entete, regles);
+        add(entete);
+    }
 
-	// activer l'option si clic sur le bouton
-	public void actionPerformed(ActionEvent ae) {
-		voix.stop();
-		Object source = ae.getSource();
-		for (int i = 0; i < nbOption; i++) {
-			if (source == boutonOption[i]) {
-				if (optionCourante != -1)
-					unFocusedButton(optionCourante);
-				optionCourante = i;
-				setFocusedButton(optionCourante);
-				lancerOption(i);
-			}
-		}
-	}
+    /**
+     * Creates the layout.
+     */
+    private void creerLayout() {
 
-	// mettre le focus sur une option
-	private void setFocusedButton(int i) {
-		voix.playShortText(boutonOption[i].getText());
-		boutonOption[i].setBackground(backgroundColor);
-		boutonOption[i].setForeground(foregroundColor);
-	}
+        placement = new GridBagLayout();
+        regles = new GridBagConstraints();
+        setLayout(placement);
+        regles.fill = GridBagConstraints.BOTH;
+        regles.weightx = 1;
+        regles.weighty = 1;
+        regles.insets = new Insets(10, 50, 10, 50);
+        regles.anchor = GridBagConstraints.NORTH;
+    }
 
-	// enlever le focus d'une option
-	private void unFocusedButton(int i) {
-		boutonOption[i].setBackground(foregroundColor);
-		boutonOption[i].setForeground(backgroundColor);
-	}
-	
+    /**
+     * Creates the buttons associated to the options.
+     * 
+     * @param noms
+     *            The options name.
+     */
+    private void creerOption(String[] noms) {
 
+        // Buttons panel creation.
+        JPanel boutons = new JPanel();
+        boutons.setLayout(new GridLayout(nbOption, 1));
+        boutonOption = new JButton[nbOption];
+        for (int i = 0; i < nbOption; i++) {
+            creerBouton(i, noms[i]);
+            boutons.add(boutonOption[i]);
+        }
+        regles.weighty = 4;
+        regles.gridx = 1;
+        regles.gridy = 2;
+        placement.setConstraints(boutons, regles);
+        add(boutons);
+    }
 
-	/**
-	 * Modifie les couleurs de fond et de premier plan pour les menus abstraits
-	 * Cette fonction est appelée par la fonction "changeColor" de la classe "Preferences"
-	 * à chaque fois que l'on presse F3 
-	 * 
-	 * Cette fonction peut être réécrite dans les classes filles si besoin
-	 * @author LOGRE Ivan, MULLER Stephane, GUYADER Erwan, helen
-	 **/
-	public void changeColor() {
-		// on est passé au jeu de couleurs suivant dans les préférences
-		// on le récupère
-		Preferences pref = Preferences.getData();
-		foregroundColor = pref.getCurrentForegroundColor();
-		backgroundColor = pref.getCurrentBackgroundColor();
-		
-		// et on met à jour le menu avec ces nouvelles couleurs
-		//entête
-		enteteBorder= new LineBorder(foregroundColor,8);
-		entete.setForeground(foregroundColor);
-		entete.setBackground(backgroundColor);
-		entete.setBorder(enteteBorder);
-		//label
-		lb1.setForeground(foregroundColor);
-		lb1.setBackground(backgroundColor);
-		//panel
-		this.getContentPane().setForeground(foregroundColor);
-		this.getContentPane().setBackground(backgroundColor);
-		//boutons
-		this.buttonBorder= new LineBorder(backgroundColor,5);
-		for (int i=0;i<boutonOption.length;i++) {
-			if(i==optionCourante){
-				boutonOption[i].setBackground(backgroundColor);
-				boutonOption[i].setForeground(foregroundColor);
-			}
-			else{
-				boutonOption[i].setBackground(foregroundColor);
-				boutonOption[i].setForeground(backgroundColor);
-			}
-			boutonOption[i].setBorder(buttonBorder);
-		}
-	}
- 
-	public void changeSize(){
-		Font f = Preferences.getData().getCurrentFont();
-		lb1.setFont(f);
-		for (int i=0;i<boutonOption.length;i++) {
-				boutonOption[i].setFont(f);
-			}
-	}
+    /**
+     * Inherited method.
+     * 
+     * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
+     */
+    public void keyPressed(KeyEvent e) {
+
+        voix.stop();
+
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+
+            // Escape to exit.
+            System.exit(0);
+        } else if (e.getKeyCode() == KeyEvent.VK_F1) {
+
+            // F1 for help.
+            voix.playWav(wavAide());
+        } else if (e.getKeyCode() == KeyEvent.VK_F2) {
+
+            // F2 for help.
+            voix.playWav(wavAide2());
+        } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+
+            // Enter to select the option.
+            lancerOption(optionCourante);
+        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+
+            // DownArrow to navigate to the bottom.
+            if (optionCourante == -1) {
+                optionCourante = 0;
+                setFocusedButton(optionCourante);
+            } else {
+                unFocusedButton(optionCourante);
+                optionCourante = (optionCourante + 1) % nbOption;
+                setFocusedButton(optionCourante);
+            }
+        } else if (e.getKeyCode() == KeyEvent.VK_UP) {
+
+            // UpArrow to navigate to the top.
+            if (optionCourante == -1) {
+                optionCourante = 0;
+                setFocusedButton(optionCourante);
+            } else {
+                unFocusedButton(optionCourante);
+                optionCourante = optionCourante - 1;
+                if (optionCourante == -1)
+                    optionCourante = nbOption - 1;
+                setFocusedButton(optionCourante);
+            }
+        }
+    }
+
+    /**
+     * Inherited method.
+     * 
+     * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
+     */
+    public void keyReleased(KeyEvent e) {
+        // NOTHING TO DO.
+    }
+
+    /**
+     * Inherited method.
+     * 
+     * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
+     */
+    public void keyTyped(KeyEvent e) {
+        // NOTHING TO DO.
+    }
+
+    /**
+     * This method has to be overridden in order to trigger the action
+     * corresponding to the given option.
+     * 
+     * @param i
+     *            The index of the option.
+     */
+    protected abstract void lancerOption(int i);
+
+    /**
+     * Used to retrieve the array containing the options name.
+     * 
+     * @return The names.
+     */
+    protected abstract String[] nomOptions();
+
+    /**
+     * Used to activate the focus on a button.
+     * 
+     * @param i
+     *            The button index.
+     */
+    private void setFocusedButton(int i) {
+        voix.playShortText(boutonOption[i].getText());
+        boutonOption[i].setBackground(couleurBoutonSelectionne);
+        boutonOption[i].setForeground(couleurTexteSelectionne);
+    }
+
+    /**
+     * Used to update the properties of a button.
+     * 
+     * @param b
+     *            The button.
+     */
+    protected void setPropertiesButton(JButton b) {
+        b.setFocusable(false);
+        b.setBackground(couleurBouton);
+        b.setForeground(couleurTexte);
+        b.setFont(fonteBouton);
+        b.setBorder(new LineBorder(Color.BLACK, 5));
+        b.addActionListener(this);
+    }
+
+    /**
+     * Used to inhibit the focus of a button.
+     * 
+     * @param i
+     *            The button index.
+     */
+    private void unFocusedButton(int i) {
+        boutonOption[i].setBackground(couleurBouton);
+        boutonOption[i].setForeground(couleurTexte);
+    }
+
+    /**
+     * Should be overridden to get the path of the .wav file for welcoming the
+     * user.
+     * 
+     * @return The corresponding path.
+     */
+    protected abstract String wavAccueil();
+
+    /**
+     * Should be overridden to get the path of the .wav file for help.
+     * 
+     * @return The corresponding path.
+     */
+    protected abstract String wavAide();
+    
+    /**
+     * Should be overridden to get the path of the .wav file for more detailed help.
+     * 
+     * @return The corresponding path.
+     */
+    protected abstract String wavAide2();
 }

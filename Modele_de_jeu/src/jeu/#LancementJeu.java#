@@ -1,0 +1,15 @@
+package jeu;
+
+import javax.swing.JFrame;
+
+
+public class LancementJeu{
+
+    public static void main(String args[]){
+
+        jeu.MenuJeu  fenetre
+        fenetre = new jeu.MenuJeu("Exemple de jeu");
+        fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+}
