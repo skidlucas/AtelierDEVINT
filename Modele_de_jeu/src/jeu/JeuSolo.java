@@ -2,11 +2,16 @@ package jeu;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
 
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -30,7 +35,6 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
     private JPanel jp1, jp2, jp3;
 	private JButton picButton1, picButton2, picButton3;
     BufferedImage backCard = null, giraffe = null;
-
 
 	// appel au constructeur de la classe mère
     public JeuSolo(String title) {
@@ -59,10 +63,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         Preferences pref = Preferences.getData();
         Color foregroundColor = pref.getCurrentForegroundColor();
         Color backgroundColor = pref.getCurrentBackgroundColor();
-
     	setLayout(new GridLayout(3, 0));
-
-
         jp1 = new JPanel();
         jp1.setLayout(new GridLayout(2, 2));
         jp1.setBackground(backgroundColor);
@@ -111,7 +112,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         text = new JLabel("Trouvez la paire de cartes");
         text.setFont(new Font("Georgia", Font.BOLD, 30));
         text.setForeground(foregroundColor);
-        text.setHorizontalAlignment(SwingConstants.CENTER);
+        text.setHorizontalAlignment(SwingConstants.HORIZONTAL);
 
         jp1.add(theme);
         jp1.add(themesList);
@@ -120,7 +121,6 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         this.add(jp1);
         try {
             backCard = ImageIO.read(new File("../ressources/images/dosCarte.JPG"));
-            giraffe = ImageIO.read(new File("ressources/images/girafe.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -135,10 +135,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         picButton3.setBackground(backgroundColor);
         picButton3.setBorder(null);
 
-        ButtonListener buttonListener = new ButtonListener();
-        picButton1.addActionListener(buttonListener);
-        picButton2.addActionListener(this);
-        picButton3.addActionListener(this);
+
         jp3.add(picButton1);
         jp3.add(picButton2);
         jp3.add(picButton3);
@@ -146,6 +143,8 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         jp2.add(text, BorderLayout.NORTH);
         jp2.add(bouton, BorderLayout.SOUTH);
         this.add(jp2);
+
+        setPairCards();
     }
 
     // lire la question si clic sur le bouton
@@ -163,6 +162,29 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
     	// on redonne le focus au JFrame principal
     	// (après un clic, le focus est sur le bouton)
     	this.requestFocus();
+    }
+
+    public void setPairCards () {
+        Random rand = new Random();
+        int firstCard = rand.nextInt(3);
+        int secondCard = firstCard;
+        while (secondCard == firstCard) {
+            secondCard = rand.nextInt(3);
+        }
+        try {
+            giraffe = ImageIO.read(new File("../ressources/images/girafe.jpg"));
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        if (firstCard == 0 || secondCard == 0) {
+            picButton1.addActionListener(new GiraffeListener());
+        }
+        if (firstCard == 1 || secondCard == 1) {
+            picButton2.addActionListener(new GiraffeListener());
+        }
+        if (firstCard == 2 || secondCard == 2) {
+            picButton3.addActionListener(new GiraffeListener());
+        }
     }
  
     // évènements clavier
@@ -219,10 +241,10 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         text.setFont(f);
 	}
 
-    public class ButtonListener implements ActionListener {
+    public class GiraffeListener implements ActionListener {
         public void actionPerformed(ActionEvent e){
             try {
-                giraffe = ImageIO.read(new File("ressources/images/girafe.jpg"));
+                giraffe = ImageIO.read(new File("../ressources/images/girafe.jpg"));
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
