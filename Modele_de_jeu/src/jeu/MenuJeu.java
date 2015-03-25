@@ -32,7 +32,6 @@ public class MenuJeu extends MenuAbstrait {
 	 * la numérotation est celle du tableau renvoyé par nomOption
 	 */
 	protected void lancerOption(int i) {
-        System.out.println("salut");
         switch (i){
             case 0 : new JeuSolo(nomJeu);break;
             case 1 : new JeuSolo(nomJeu);break;
