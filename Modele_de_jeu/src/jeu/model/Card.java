@@ -12,4 +12,8 @@ public class Card extends JButton {
     public Card(ImageIcon image) {
         this.image = image;
     }
+
+    public ImageIcon getImage() {
+        return image;
+    }
 }
