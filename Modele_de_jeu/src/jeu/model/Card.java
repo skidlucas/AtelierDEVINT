@@ -7,13 +7,24 @@ import javax.swing.*;
  * @version 25/03/15
  */
 public class Card extends JButton {
-    ImageIcon image;
+    public static final String dosCarte = "../ressources/images/dosCarte.jpg";
 
-    public Card(ImageIcon image) {
+    private boolean visible = false;
+    private String image = "../ressources/images/dosCarte.jpg";
+
+    public Card() {
+        super(new ImageIcon(dosCarte));
+    }
+
+    public void setImage(String image) {
         this.image = image;
     }
 
-    public ImageIcon getImage() {
-        return image;
+    public void switchFace() {
+        if (visible) {
+            this.setIcon(new ImageIcon(dosCarte));
+        } else {
+            this.setIcon(new ImageIcon(image));
+        }
     }
 }

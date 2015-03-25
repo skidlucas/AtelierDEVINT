@@ -8,6 +8,7 @@ import javax.swing.border.TitledBorder;
 
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
+import jeu.model.Card;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -33,13 +34,24 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
     private JLabel theme, difficulte, text;
     private JButton bouton;
     private JPanel jp1, jp2, jp3;
-	private JButton picButton1, picButton2, picButton3;
-    BufferedImage backCard = null, giraffe = null;
+
+    private int nbCards;
+    private List<Card> cards;
 
 	// appel au constructeur de la classe mère
     public JeuSolo(String title) {
     	super(title);
      }
+
+    public void initCards(int nbCards) {
+        cards = new ArrayList<>();
+        for (int i = 0; i < nbCards; i++) {
+            Card card = new Card();
+            card.setBackground(Preferences.getData().getCurrentBackgroundColor());
+            card.setBorder(null);
+            cards.add(card);
+        }
+    }
     
 	// renvoie le fichier wave contenant le message d'accueil
 	protected  String wavAccueil() {
@@ -59,6 +71,9 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
     // définition de la méthode abstraite "init()"
     // initialise le frame 
     protected void init() {// on récupère les couleurs de base dans la classe Preferences
+        nbCards = 3;
+        initCards(nbCards);
+
         bouton = new JButton("Commencer");
         Preferences pref = Preferences.getData();
         Color foregroundColor = pref.getCurrentForegroundColor();
@@ -119,26 +134,12 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         jp1.add(difficulte);
         jp1.add(difficultesList);
         this.add(jp1);
-        try {
-            backCard = ImageIO.read(new File("../ressources/images/dosCarte.JPG"));
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        for (Card card : cards) {
+            card.addActionListener(new GiraffeListener());
+            jp3.add(card);
         }
-        picButton1 = new JButton(new ImageIcon(backCard));
-        picButton1.setBackground(backgroundColor);
-        picButton1.setBorder(null);
 
-        picButton2 = new JButton(new ImageIcon(backCard));
-        picButton3 = new JButton(new ImageIcon(backCard));
-        picButton2.setBackground(backgroundColor);
-        picButton2.setBorder(null);
-        picButton3.setBackground(backgroundColor);
-        picButton3.setBorder(null);
-
-
-        jp3.add(picButton1);
-        jp3.add(picButton2);
-        jp3.add(picButton3);
         this.add(jp3);
         jp2.add(text, BorderLayout.NORTH);
         jp2.add(bouton, BorderLayout.SOUTH);
@@ -171,19 +172,15 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         while (secondCard == firstCard) {
             secondCard = rand.nextInt(3);
         }
-        try {
-            giraffe = ImageIO.read(new File("../ressources/images/girafe.jpg"));
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+
         if (firstCard == 0 || secondCard == 0) {
-            picButton1.addActionListener(new GiraffeListener());
+            cards.get(0).setImage("../ressources/images/girafe.jpg");
         }
         if (firstCard == 1 || secondCard == 1) {
-            picButton2.addActionListener(new GiraffeListener());
+            cards.get(1).setImage("../ressources/images/girafe.jpg");
         }
         if (firstCard == 2 || secondCard == 2) {
-            picButton3.addActionListener(new GiraffeListener());
+            cards.get(2).setImage("../ressources/images/girafe.jpg");
         }
     }
  
@@ -219,13 +216,13 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         jp3.setForeground(pref.getCurrentForegroundColor());
         theme.setForeground(pref.getCurrentForegroundColor());
         difficulte.setForeground(pref.getCurrentForegroundColor());
-        picButton1.setBackground(pref.getCurrentBackgroundColor());
-        picButton2.setBackground(pref.getCurrentBackgroundColor());
-        picButton3.setBackground(pref.getCurrentBackgroundColor());
         bouton.setBackground(pref.getCurrentForegroundColor());
         bouton.setForeground(pref.getCurrentBackgroundColor());
         text.setForeground(pref.getCurrentForegroundColor());
 
+        for (Card card : cards) {
+            card.setBackground(pref.getCurrentBackgroundColor());
+        }
     }
 	
 	
@@ -243,13 +240,8 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
 
     public class GiraffeListener implements ActionListener {
         public void actionPerformed(ActionEvent e){
-            try {
-                giraffe = ImageIO.read(new File("../ressources/images/girafe.jpg"));
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-            JButton source = (JButton) e.getSource();
-            source.setIcon(new ImageIcon(giraffe));
+            Card sourceCard = (Card) e.getSource();
+            sourceCard.switchFace();
             requestFocus();
         }
     }
