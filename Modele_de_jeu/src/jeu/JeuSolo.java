@@ -18,6 +18,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Stack;
 
 /** Cette classe est un exemple d'interface de jeu.
  *  Elle étend DevintFrame pour avoir un Frame et réagir aux évênements claviers
@@ -166,21 +167,20 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
     }
 
     public void setPairCards () {
-        Random rand = new Random();
-        int firstCard = rand.nextInt(3);
-        int secondCard = firstCard;
-        while (secondCard == firstCard) {
-            secondCard = rand.nextInt(3);
-        }
+        Stack<String> images = new Stack<>();
+        images.add("../ressources/images/girafe.jpg");
+        images.add("../ressources/images/girafe.jpg");
+        images.add("../ressources/images/lion.jpg");
+        images.add("../ressources/images/lion.jpg");
 
-        if (firstCard == 0 || secondCard == 0) {
-            cards.get(0).setImage("../ressources/images/girafe.jpg");
-        }
-        if (firstCard == 1 || secondCard == 1) {
-            cards.get(1).setImage("../ressources/images/girafe.jpg");
-        }
-        if (firstCard == 2 || secondCard == 2) {
-            cards.get(2).setImage("../ressources/images/girafe.jpg");
+        Random random = new Random();
+        for (int i = 0; i < nbCards; i++) {
+            int rand;
+            do {
+                rand = random.nextInt(nbCards);
+            } while (!cards.get(rand).isReady());
+
+            cards.get(rand).setImage(images.pop());
         }
     }
  
@@ -241,7 +241,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
     public class GiraffeListener implements ActionListener {
         public void actionPerformed(ActionEvent e){
             Card sourceCard = (Card) e.getSource();
-            sourceCard.switchFace();
+            sourceCard.turn();
             requestFocus();
         }
     }

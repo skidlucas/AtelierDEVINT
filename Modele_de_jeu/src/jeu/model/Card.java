@@ -16,15 +16,21 @@ public class Card extends JButton {
         super(new ImageIcon(dosCarte));
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public boolean isReady() {
+        return image.equals(dosCarte);
     }
 
-    public void switchFace() {
+    public void turn() {
         if (visible) {
             this.setIcon(new ImageIcon(dosCarte));
         } else {
             this.setIcon(new ImageIcon(image));
         }
+
+        visible = !visible;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
