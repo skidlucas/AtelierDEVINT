@@ -9,6 +9,7 @@
 package jeu; 
 
 import devintAPI.MenuAbstrait;
+import jeu.view.Options;
 
 public class MenuJeu extends MenuAbstrait {
 
@@ -31,10 +32,11 @@ public class MenuJeu extends MenuAbstrait {
 	 * la numérotation est celle du tableau renvoyé par nomOption
 	 */
 	protected void lancerOption(int i) {
-		switch (i){
+        System.out.println("salut");
+        switch (i){
             case 0 : new JeuSolo(nomJeu);break;
             case 1 : new JeuSolo(nomJeu);break;
-            case 2 : new GestionSon("Options");break;
+            case 2 : new Options("Options");break;
             case 3 : new FichierScore("Scores");break;
             case 4 : System.exit(0);
 		default: System.err.println("action non définie");
