@@ -2,9 +2,7 @@ package jeu;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
@@ -113,7 +111,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         text = new JLabel("Trouvez la paire de cartes");
         text.setFont(new Font("Georgia", Font.BOLD, 30));
         text.setForeground(foregroundColor);
-        text.setHorizontalAlignment(SwingConstants.HORIZONTAL);
+        text.setHorizontalAlignment(SwingConstants.CENTER);
 
         jp1.add(theme);
         jp1.add(themesList);
@@ -122,7 +120,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         this.add(jp1);
         try {
             backCard = ImageIO.read(new File("../ressources/images/dosCarte.JPG"));
-            giraffe = ImageIO.read(new File("../ressources/images/giraffes.jpg"));
+            giraffe = ImageIO.read(new File("ressources/images/girafe.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -224,7 +222,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
     public class ButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e){
             try {
-                giraffe = ImageIO.read(new File("../ressources/images/giraffes.jpg"));
+                giraffe = ImageIO.read(new File("ressources/images/girafe.jpg"));
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
