@@ -27,12 +27,11 @@ import java.io.IOException;
 public class JeuSolo extends FenetreAbstraite implements ActionListener{
 
 	private JComboBox themesList, difficultesList;
-    private JLabel theme, difficulte;
+    private JLabel theme, difficulte, text;
     private JButton bouton;
     private JPanel jp1, jp2, jp3;
-	private JButton picLabel;
-    private JButton picLabel2;
-    private JButton picLabel3;
+	private JButton picButton1, picButton2, picButton3;
+    BufferedImage backCard = null, giraffe = null;
 
 
 	// appel au constructeur de la classe mère
@@ -105,44 +104,53 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         difficulte.setFont(new Font("Georgia", Font.BOLD, 30));
         difficulte.setForeground(foregroundColor);
 
-        bouton.setBackground(new Color(50, 50, 255));
-        bouton.setBorder(new LineBorder(Color.BLACK, 10));
+        bouton.setBackground(foregroundColor);
+        bouton.setBorder(new LineBorder(Color.BLACK, 5));
         bouton.setFont(new Font("Georgia", 1, 40));
+        bouton.setForeground(backgroundColor);
         bouton.addActionListener(this);
+
+        text = new JLabel("Trouvez la paire de cartes");
+        text.setFont(new Font("Georgia", Font.BOLD, 30));
+        text.setForeground(foregroundColor);
+        text.setHorizontalAlignment(SwingConstants.HORIZONTAL);
 
         jp1.add(theme);
         jp1.add(themesList);
         jp1.add(difficulte);
         jp1.add(difficultesList);
         this.add(jp1);
-        BufferedImage myPicture = null;
         try {
-            myPicture = ImageIO.read(new File("../ressources/images/dosCarte.JPG"));
+            backCard = ImageIO.read(new File("../ressources/images/dosCarte.JPG"));
+            giraffe = ImageIO.read(new File("../ressources/images/giraffes.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        picLabel = new JButton(new ImageIcon(myPicture));
-        picLabel.setBackground(backgroundColor);
-        picLabel.setBorder(null);
+        picButton1 = new JButton(new ImageIcon(backCard));
+        picButton1.setBackground(backgroundColor);
+        picButton1.setBorder(null);
 
-        picLabel2 = new JButton(new ImageIcon(myPicture));
-        picLabel3 = new JButton(new ImageIcon(myPicture));
-        picLabel2.setBackground(backgroundColor);
-        picLabel2.setBorder(null);
-        picLabel3.setBackground(backgroundColor);
-        picLabel3.setBorder(null);
-        picLabel.addActionListener(this);
-        picLabel2.addActionListener(this);
-        picLabel.addActionListener(this);
-        jp3.add(picLabel);
-        jp3.add(picLabel2);
-        jp3.add(picLabel3);
+        picButton2 = new JButton(new ImageIcon(backCard));
+        picButton3 = new JButton(new ImageIcon(backCard));
+        picButton2.setBackground(backgroundColor);
+        picButton2.setBorder(null);
+        picButton3.setBackground(backgroundColor);
+        picButton3.setBorder(null);
+
+        ButtonListener buttonListener = new ButtonListener();
+        picButton1.addActionListener(buttonListener);
+        picButton2.addActionListener(this);
+        picButton3.addActionListener(this);
+        jp3.add(picButton1);
+        jp3.add(picButton2);
+        jp3.add(picButton3);
         this.add(jp3);
+        jp2.add(text, BorderLayout.NORTH);
         jp2.add(bouton, BorderLayout.SOUTH);
         this.add(jp2);
     }
 
-    // lire la question si clic sur le bouton 
+    // lire la question si clic sur le bouton
     public void actionPerformed(ActionEvent ae){
        	// toujours stopper la voix avant de parler
     	voix.stop();
@@ -153,8 +161,8 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
     	if (source.equals(bouton)) {
     		String text = "Vous avez appuyé sur le bouton";
     		voix.playText(text);
-    	}	
-    	// on redonne le focus au JFrame principal 
+    	}
+    	// on redonne le focus au JFrame principal
     	// (après un clic, le focus est sur le bouton)
     	this.requestFocus();
     }
@@ -191,9 +199,12 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         jp3.setForeground(pref.getCurrentForegroundColor());
         theme.setForeground(pref.getCurrentForegroundColor());
         difficulte.setForeground(pref.getCurrentForegroundColor());
-        picLabel.setBackground(pref.getCurrentBackgroundColor());
-        picLabel2.setBackground(pref.getCurrentBackgroundColor());
-        picLabel3.setBackground(pref.getCurrentBackgroundColor());
+        picButton1.setBackground(pref.getCurrentBackgroundColor());
+        picButton2.setBackground(pref.getCurrentBackgroundColor());
+        picButton3.setBackground(pref.getCurrentBackgroundColor());
+        bouton.setBackground(pref.getCurrentForegroundColor());
+        bouton.setForeground(pref.getCurrentBackgroundColor());
+        text.setForeground(pref.getCurrentForegroundColor());
 
     }
 	
@@ -207,6 +218,19 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         difficultesList.setFont(f);
         theme.setFont(f);
         difficulte.setFont(f);
+        text.setFont(f);
 	}
 
+    public class ButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e){
+            try {
+                giraffe = ImageIO.read(new File("../ressources/images/giraffes.jpg"));
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+            JButton source = (JButton) e.getSource();
+            source.setIcon(new ImageIcon(giraffe));
+            requestFocus();
+        }
+    }
 }
