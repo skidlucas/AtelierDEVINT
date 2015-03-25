@@ -30,7 +30,11 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
     private JLabel theme, difficulte;
     private JButton bouton;
     private JPanel jp1, jp2, jp3;
-	
+	private JButton picLabel;
+    private JButton picLabel2;
+    private JButton picLabel3;
+
+
 	// appel au constructeur de la classe mère
     public JeuSolo(String title) {
     	super(title);
@@ -71,7 +75,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         jp2.setBackground(backgroundColor);
 
         jp3 = new JPanel();
-        jp3.setLayout(new FlowLayout());
+        jp3.setLayout(new GridLayout(0,3));
         jp3.setBackground(backgroundColor);
 
 
@@ -113,13 +117,26 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         this.add(jp1);
         BufferedImage myPicture = null;
         try {
-            myPicture = ImageIO.read(new File("C:\\Users\\user\\Downloads\\ZmKRg0G.jpg"));
+            myPicture = ImageIO.read(new File("../ressources/images/dosCarte.JPG"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-        add(picLabel);
+        picLabel = new JButton(new ImageIcon(myPicture));
+        picLabel.setBackground(backgroundColor);
+        picLabel.setBorder(null);
+
+        picLabel2 = new JButton(new ImageIcon(myPicture));
+        picLabel3 = new JButton(new ImageIcon(myPicture));
+        picLabel2.setBackground(backgroundColor);
+        picLabel2.setBorder(null);
+        picLabel3.setBackground(backgroundColor);
+        picLabel3.setBorder(null);
+        picLabel.addActionListener(this);
+        picLabel2.addActionListener(this);
+        picLabel.addActionListener(this);
         jp3.add(picLabel);
+        jp3.add(picLabel2);
+        jp3.add(picLabel3);
         this.add(jp3);
         jp2.add(bouton, BorderLayout.SOUTH);
         this.add(jp2);
@@ -174,6 +191,9 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         jp3.setForeground(pref.getCurrentForegroundColor());
         theme.setForeground(pref.getCurrentForegroundColor());
         difficulte.setForeground(pref.getCurrentForegroundColor());
+        picLabel.setBackground(pref.getCurrentBackgroundColor());
+        picLabel2.setBackground(pref.getCurrentBackgroundColor());
+        picLabel3.setBackground(pref.getCurrentBackgroundColor());
 
     }
 	
