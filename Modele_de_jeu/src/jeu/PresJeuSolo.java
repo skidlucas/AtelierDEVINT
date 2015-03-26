@@ -1,39 +1,43 @@
 package jeu;
 
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
 import jeu.model.Card;
 
-import javax.swing.*;
-import javax.swing.Timer;
-import javax.swing.border.LineBorder;
-import java.awt.*;
-import java.awt.List;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+import java.util.Timer;
 
-/**
- * @author Nicolas HRY
- * @version 26/03/2015.
+/** Cette classe est un exemple d'interface de jeu.
+ *  Elle étend DevintFrame pour avoir un Frame et réagir aux évênements claviers
+ * Implémente ActionListener pour réagir au clic souris sur le bouton.
+ * On surchage la méthode "keyPressed" pour associer une action à la touche F3
+ * 
+ * @author helene
+ *
  */
-public class JeuSolo extends FenetreAbstraite implements ActionListener{
 
-    private JComboBox themesList, difficultesList;
+public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
+
+	private JComboBox themesList, difficultesList;
     private JLabel theme, difficulte, text;
     private JButton bouton;
     private JPanel jp1, jp2, jp3;
 
-    private java.util.List<Card> selectedCards;
+    private List<Card> selectedCards;
     private int nbReturnedCards;
     private int nbCards;
-    private java.util.List<Card> cards;
+    private List<Card> cards;
 
-    // appel au constructeur de la classe mère
-    public JeuSolo(String title) {
-        super(title);
-    }
+	// appel au constructeur de la classe mère
+    public PresJeuSolo(String title) {
+    	super(title);
+     }
 
     public void initCards(int nbCards) {
         selectedCards = new ArrayList<Card>();
@@ -46,24 +50,24 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
             cards.add(card);
         }
     }
-
-    // renvoie le fichier wave contenant le message d'accueil
-    protected  String wavAccueil() {
-        return "../ressources/sons/accueil.wav";
-    }
-
-    // renvoie le fichier wave contenant la règle du jeu
-    protected  String wavRegleJeu() {
-        return "../ressources/sons/aideF1.wav";
-    }
-
-    // renvoie le fichier wave contenant la règle du jeu
-    protected  String wavAide() {
-        return "../ressources/sons/aide.wav";
-    }
+    
+	// renvoie le fichier wave contenant le message d'accueil
+	protected  String wavAccueil() {
+		return "../ressources/sons/accueil.wav";
+	}
+	
+	// renvoie le fichier wave contenant la règle du jeu
+	protected  String wavRegleJeu() {
+		return "../ressources/sons/aideF1.wav";
+	}
+	
+	// renvoie le fichier wave contenant la règle du jeu
+	protected  String wavAide() {
+		return "../ressources/sons/aide.wav";
+	}
 
     // définition de la méthode abstraite "init()"
-    // initialise le frame
+    // initialise le frame 
     protected void init() {// on récupère les couleurs de base dans la classe Preferences
         nbCards = 4;
         initCards(nbCards);
@@ -72,7 +76,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         Preferences pref = Preferences.getData();
         Color foregroundColor = pref.getCurrentForegroundColor();
         Color backgroundColor = pref.getCurrentBackgroundColor();
-        setLayout(new GridLayout(3, 0));
+    	setLayout(new GridLayout(3, 0));
         jp1 = new JPanel();
         jp1.setLayout(new GridLayout(2, 2));
         jp1.setBackground(backgroundColor);
@@ -89,10 +93,10 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         String[] themes = {"Animaux", "Fruits", "Caractères chinois" };
         themesList = new JComboBox(themes);
         themesList.setSelectedIndex(0);
-        themesList.setEditable(false);
-        themesList.setFont(new Font("Georgia", 1, 30));
-        themesList.setBackground(backgroundColor);
-        themesList.setForeground(foregroundColor);
+    	themesList.setEditable(false);
+    	themesList.setFont(new Font("Georgia", 1, 30));
+		themesList.setBackground(backgroundColor);
+		themesList.setForeground(foregroundColor);
         themesList.addActionListener(this);
 
         String[] difficultes = {"Facile", "Moyen", "Difficile"};
@@ -144,19 +148,19 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
 
     // lire la question si clic sur le bouton
     public void actionPerformed(ActionEvent ae){
-        // toujours stopper la voix avant de parler
-        voix.stop();
-        // on récupère la source de l'évènement
-        Object source = ae.getSource();
-        // si c'est le bouton "question" on lit la question
-        // le contenu des questions est variable donc on les lit avec SI_VOX
-        if (source.equals(bouton)) {
-            String text = "Vous avez appuyé sur le bouton";
-            voix.playText(text);
-        }
-        // on redonne le focus au JFrame principal
-        // (après un clic, le focus est sur le bouton)
-        this.requestFocus();
+       	// toujours stopper la voix avant de parler
+    	voix.stop();
+    	// on récupère la source de l'évènement
+     	Object source = ae.getSource();
+     	// si c'est le bouton "question" on lit la question
+     	// le contenu des questions est variable donc on les lit avec SI_VOX
+    	if (source.equals(bouton)) {
+    		String text = "Vous avez appuyé sur le bouton";
+    		voix.playText(text);
+    	}
+    	// on redonne le focus au JFrame principal
+    	// (après un clic, le focus est sur le bouton)
+    	this.requestFocus();
     }
 
     public void setPairCards () {
@@ -176,29 +180,29 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
             cards.get(rand).setImage(images.pop());
         }
     }
-
+ 
     // évènements clavier
     public void keyPressed(KeyEvent e) {
-        // appel à la méthode mère qui gère les évènements ESC, F1, F3, F4
-        super.keyPressed(e);
-        // cas particulier pour ce jeu : la touche F5
-        if (e.getKeyCode()==KeyEvent.VK_F5){
-            voix.playText("Vous venez d'appuyer sur EFFE 5");
-        }
+    	// appel à la méthode mère qui gère les évènements ESC, F1, F3, F4
+    	super.keyPressed(e);
+    	// cas particulier pour ce jeu : la touche F5
+    	if (e.getKeyCode()==KeyEvent.VK_F5){
+    	   	voix.playText("Vous venez d'appuyer sur EFFE 5");
+    	}
     }
-
-    /**
-     * Pour modifier les couleurs de fond et de premier plan de la fenêtre
-     * Cette fonction est appelée par la fonction "changeColor" de la classe "Preferences"
-     * à chaque fois que l'on presse F3
-     *
-     * on change la couleur du texte principal
-     **/
-    public  void changeColor() {
-        // on récupère les couleurs de base dans la classe Preferences
-        Preferences pref = Preferences.getData();
-        themesList.setBackground(pref.getCurrentBackgroundColor());
-        themesList.setForeground(pref.getCurrentForegroundColor());
+    
+	/**
+	 * Pour modifier les couleurs de fond et de premier plan de la fenêtre
+	 * Cette fonction est appelée par la fonction "changeColor" de la classe "Preferences"
+	 * à chaque fois que l'on presse F3 
+	 * 
+	 * on change la couleur du texte principal
+	 **/
+	public  void changeColor() {
+    	// on récupère les couleurs de base dans la classe Preferences 
+		Preferences pref = Preferences.getData();
+		themesList.setBackground(pref.getCurrentBackgroundColor());
+		themesList.setForeground(pref.getCurrentForegroundColor());
         difficultesList.setBackground(pref.getCurrentBackgroundColor());
         difficultesList.setForeground(pref.getCurrentForegroundColor());
         jp1.setBackground(pref.getCurrentBackgroundColor());
@@ -217,19 +221,19 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
             card.setBackground(pref.getCurrentBackgroundColor());
         }
     }
-
-
-    /**
-     * Pour modifier la police des textes à chaque fois que l'on presse F4
-     */
-    public void changeSize(){
-        Font f = Preferences.getData().getCurrentFont();
-        themesList.setFont(f);
+	
+	
+	/**
+	 * Pour modifier la police des textes à chaque fois que l'on presse F4 
+	 */
+	public void changeSize(){
+		Font f = Preferences.getData().getCurrentFont();
+		themesList.setFont(f);
         difficultesList.setFont(f);
         theme.setFont(f);
         difficulte.setFont(f);
         text.setFont(f);
-    }
+	}
 
     public class CardsListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -238,26 +242,32 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
             sourceCard.setEnabled(false);
             sourceCard.setDisabledIcon(new ImageIcon(sourceCard.getImage()));
             selectedCards.add(sourceCard);
-                    if (selectedCards.size() == 2) {
-                        if (selectedCards.get(0).getImage().equals(selectedCards.get(1).getImage())) {
-                            selectedCards.get(0).setEnabled(false);
-                            selectedCards.get(0).setDisabledIcon(new ImageIcon(selectedCards.get(0).getImage()));
-                            selectedCards.get(1).setEnabled(false);
-                            selectedCards.get(1).setDisabledIcon(new ImageIcon(selectedCards.get(0).getImage()));
-                            selectedCards = new ArrayList<Card>();
-                            nbReturnedCards += 2;
-                        } else {
+            if (selectedCards.size() == 2) {
+                if (selectedCards.get(0).getImage().equals(selectedCards.get(1).getImage())) {
+                    selectedCards.get(0).setEnabled(false);
+                    selectedCards.get(0).setDisabledIcon(new ImageIcon(selectedCards.get(0).getImage()));
+                    selectedCards.get(1).setEnabled(false);
+                    selectedCards.get(1).setDisabledIcon(new ImageIcon(selectedCards.get(0).getImage()));
+                    selectedCards = new ArrayList<Card>();
+                    nbReturnedCards += 2;
+                    if(nbReturnedCards == nbCards) {
+                        bouton.addActionListener(new startGameListener());
+                    }
+                } else {
+                    int delay = 2000;
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        public void run() {
                             selectedCards.get(0).turn();
                             selectedCards.get(0).setEnabled(true);
                             selectedCards.get(1).turn();
                             selectedCards.get(1).setEnabled(true);
                             selectedCards = new ArrayList<Card>();
                         }
-                    }
-                    requestFocus();
-            if(nbReturnedCards == nbCards) {
-                bouton.addActionListener(new startGameListener());
+                    }, delay);
+                }
             }
+            requestFocus();
         }
     }
 
@@ -267,5 +277,4 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
             dispose();
         }
     }
-
 }

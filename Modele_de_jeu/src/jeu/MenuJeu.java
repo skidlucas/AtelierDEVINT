@@ -11,6 +11,8 @@ package jeu;
 import devintAPI.MenuAbstrait;
 import jeu.view.Options;
 
+import javax.swing.*;
+
 public class MenuJeu extends MenuAbstrait {
 
 	/** constructeur
@@ -18,6 +20,7 @@ public class MenuJeu extends MenuAbstrait {
 	 */
 	public MenuJeu(String title) {
 		super(title);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 
 	/** renvoie le nom des options du menu
@@ -33,8 +36,8 @@ public class MenuJeu extends MenuAbstrait {
 	 */
 	protected void lancerOption(int i) {
         switch (i){
-            case 0 : new JeuSolo(nomJeu);break;
-            case 1 : new JeuSolo(nomJeu);break;
+            case 0 : new PresJeuSolo(nomJeu);break;
+            case 1 : new PresJeuSolo(nomJeu);break;
             case 2 : new Options("Options");break;
             case 3 : new FichierScore("Scores");break;
             case 4 : System.exit(0);
