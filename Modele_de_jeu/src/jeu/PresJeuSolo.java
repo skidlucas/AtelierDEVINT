@@ -37,6 +37,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
 	// appel au constructeur de la classe mère
     public PresJeuSolo(String title) {
     	super(title);
+        init();
      }
 
     public void initCards(int nbCards) {
@@ -170,6 +171,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         images.add("../ressources/images/lion.jpg");
         images.add("../ressources/images/lion.jpg");
 
+
         Random random = new Random();
         for (int i = 0; i < nbCards; i++) {
             int rand;
@@ -254,6 +256,14 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
                         bouton.addActionListener(new startGameListener());
                     }
                 } else {
+                    List<Card> disabledCards = new ArrayList<>();
+                    for (Card c : cards) {
+                        if (!selectedCards.contains(c)) {
+                            disabledCards.add(c);
+                            c.setEnabled(false);
+                            c.setDisabledIcon(new ImageIcon(c.dosCarte));
+                        }
+                    }
                     int delay = 2000;
                     Timer timer = new Timer();
                     timer.schedule(new TimerTask() {
@@ -263,8 +273,12 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
                             selectedCards.get(1).turn();
                             selectedCards.get(1).setEnabled(true);
                             selectedCards = new ArrayList<Card>();
+                            for (Card c : disabledCards) {
+                                c.setEnabled(true);
+                            }
                         }
                     }, delay);
+
                 }
             }
             requestFocus();
@@ -273,7 +287,14 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
 
     private class startGameListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            JeuSolo frameSoloGame = new JeuSolo("Partie Solo");
+            String difficulte = (String)difficultesList.getSelectedItem();
+            int cardsForGame = 0;
+            switch (difficulte) {
+                case "Facile": cardsForGame = 12; break;
+                case "Moyen": cardsForGame = 18; break;
+                case "Difficile": cardsForGame = 24; break;
+            }
+            JeuSolo frameSoloGame = new JeuSolo("Partie Solo", cardsForGame);
             dispose();
         }
     }

@@ -27,7 +27,7 @@ public abstract class FenetreAbstraite extends  DevintFrameListener{
     public FenetreAbstraite(String title) {
     	super(title);
        	// méthode init à implémenter, elle construit ce qui est dans le frame
-       	init();
+       	//init()
 	     // visible
     	this.setVisible(true);
     	// a le focus
