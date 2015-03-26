@@ -30,6 +30,9 @@ public class Card extends JButton {
         visible = !visible;
     }
 
+    public String getImage () {
+        return this.image;
+    }
     public void setImage(String image) {
         this.image = image;
     }

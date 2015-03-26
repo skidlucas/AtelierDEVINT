@@ -36,6 +36,8 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
     private JButton bouton;
     private JPanel jp1, jp2, jp3;
 
+    private List<Card> selectedCards;
+    private int nbReturnedCards;
     private int nbCards;
     private List<Card> cards;
 
@@ -45,6 +47,8 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
      }
 
     public void initCards(int nbCards) {
+        selectedCards = new ArrayList<Card>();
+        nbReturnedCards = 0;
         cards = new ArrayList<>();
         for (int i = 0; i < nbCards; i++) {
             Card card = new Card();
@@ -72,7 +76,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
     // définition de la méthode abstraite "init()"
     // initialise le frame 
     protected void init() {// on récupère les couleurs de base dans la classe Preferences
-        nbCards = 3;
+        nbCards = 4;
         initCards(nbCards);
 
         bouton = new JButton("Commencer");
@@ -89,7 +93,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         jp2.setBackground(backgroundColor);
 
         jp3 = new JPanel();
-        jp3.setLayout(new GridLayout(0,3));
+        jp3.setLayout(new GridLayout(0,nbCards));
         jp3.setBackground(backgroundColor);
 
 
@@ -97,7 +101,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         themesList = new JComboBox(themes);
         themesList.setSelectedIndex(0);
     	themesList.setEditable(false);
-    	themesList.setFont(new Font("Georgia",1,30));
+    	themesList.setFont(new Font("Georgia", 1, 30));
 		themesList.setBackground(backgroundColor);
 		themesList.setForeground(foregroundColor);
         themesList.addActionListener(this);
@@ -106,7 +110,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         difficultesList = new JComboBox(difficultes);
         difficultesList.setSelectedIndex(0);
         difficultesList.setEditable(false);
-        difficultesList.setFont(new Font("Georgia",1,30));
+        difficultesList.setFont(new Font("Georgia", 1, 30));
         difficultesList.setBackground(backgroundColor);
         difficultesList.setForeground(foregroundColor);
         difficultesList.addActionListener(this);
@@ -137,7 +141,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         this.add(jp1);
 
         for (Card card : cards) {
-            card.addActionListener(new GiraffeListener());
+            card.addActionListener(new CardsListener());
             jp3.add(card);
         }
 
@@ -238,10 +242,25 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener{
         text.setFont(f);
 	}
 
-    public class GiraffeListener implements ActionListener {
+    public class CardsListener implements ActionListener {
         public void actionPerformed(ActionEvent e){
             Card sourceCard = (Card) e.getSource();
             sourceCard.turn();
+            selectedCards.add(sourceCard);
+            if (selectedCards.size() == 2) {
+                if (selectedCards.get(0).getImage().equals(selectedCards.get(1).getImage())) {
+                    selectedCards.get(0).setEnabled(false);
+                    selectedCards.get(0).setDisabledIcon(new ImageIcon(selectedCards.get(0).getImage()));
+                    selectedCards.get(1).setEnabled(false);
+                    selectedCards.get(1).setDisabledIcon(new ImageIcon(selectedCards.get(0).getImage()));
+                    selectedCards = new ArrayList<Card>();
+                    nbReturnedCards += 2;
+                } else {
+                    selectedCards.get(0).turn();
+                    selectedCards.get(1).turn();
+                    selectedCards = new ArrayList<Card>();
+                }
+            }
             requestFocus();
         }
     }
