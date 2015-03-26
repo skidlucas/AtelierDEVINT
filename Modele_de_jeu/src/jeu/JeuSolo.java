@@ -239,6 +239,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         Preferences pref = Preferences.getData();
         endOfGame.setBackground(pref.getCurrentBackgroundColor());
         endOfGame.setForeground(pref.getCurrentForegroundColor());
+        remove(jp1);
         remove(jp2);
         endOfGame.add(imageFin);
         messageFin = new JPanel();
