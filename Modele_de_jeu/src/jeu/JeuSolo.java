@@ -12,6 +12,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.List;
 
@@ -21,26 +23,45 @@ import java.util.List;
  */
 public class JeuSolo extends FenetreAbstraite implements ActionListener {
 
+    private static int minute=0,seconde=0;
     private JPanel jp1, jp2;
     private JLabel nomJoueur;
     private JLabel scoreJoueur;
     private JLabel timer;
+    private int nbPoints;
     private List<Card> returnedCards;
     private List<Card> selectedCards;
-    private int nbReturnedCards;
     private int nbCards;
+    private int pointsFail;
+    private int pointsSuccess;
     private List<Card> cards;
+    private Timer chrono;
+    private JPanel endOfGame;
+    private JButton goToScores;
+    private JButton quitterGame;
+    private  JLabel imageFin;
+    private JPanel messageFin;
+    private JLabel textMsg;
+    private JPanel boutonsFin;
 
     // appel au constructeur de la classe mère
     public JeuSolo(String title, int nbCards) {
         super(title);
+        this.pointsFail = -1;
+        switch(nbCards) {
+            case 12: this.pointsSuccess = 3; break;
+            case 18: this.pointsSuccess = 4; break;
+            case 24: this.pointsSuccess = 5; break;
+        }
+        chrono = new Timer(1000, new ChronoListener());
+        chrono.start();
+        nbPoints = 0;
         this.nbCards = nbCards;
         init();
     }
 
     public void initCards(int nbCards) {
         selectedCards = new ArrayList<Card>();
-        nbReturnedCards = 0;
         cards = new ArrayList<>();
         for (int i = 0; i < nbCards; i++) {
             Card card = new Card();
@@ -69,6 +90,14 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
     // initialise le frame
     protected void init() {// on récupère les couleurs de base dans la classe Preferences
         initCards(nbCards);
+        boutonsFin = new JPanel();
+        messageFin = new JPanel();
+        textMsg = new JLabel();
+        imageFin = new JLabel(new ImageIcon("../ressources/images/finJeu.png"));
+        goToScores = new JButton("Scores");
+        quitterGame = new JButton("Quitter");
+        endOfGame = new JPanel();
+        endOfGame.setLayout(new GridLayout(2,0));
         returnedCards = new ArrayList<>();
         setLayout(new BorderLayout());
         Preferences pref = Preferences.getData();
@@ -80,7 +109,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         nomJoueur.setForeground(foregroundColor);
         nomJoueur.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        scoreJoueur = new JLabel("Score");
+        scoreJoueur = new JLabel("Score : " + nbPoints);
         scoreJoueur.setFont(new Font("Georgia", Font.BOLD, 30));
         scoreJoueur.setForeground(foregroundColor);
         scoreJoueur.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -187,9 +216,59 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         nomJoueur.setForeground(pref.getCurrentForegroundColor());
         timer.setBackground(pref.getCurrentBackgroundColor());
         timer.setForeground(pref.getCurrentForegroundColor());
+        endOfGame.setBackground(pref.getCurrentBackgroundColor());
+        endOfGame.setForeground(pref.getCurrentForegroundColor());
+        imageFin.setBackground(pref.getCurrentBackgroundColor());
+        imageFin.setForeground(pref.getCurrentForegroundColor());
+        messageFin.setBackground(pref.getCurrentBackgroundColor());
+        messageFin.setForeground(pref.getCurrentForegroundColor());
+        textMsg.setBackground(pref.getCurrentBackgroundColor());
+        textMsg.setForeground(pref.getCurrentForegroundColor());
+        goToScores.setBackground(pref.getCurrentForegroundColor());
+        goToScores.setForeground(pref.getCurrentBackgroundColor());
+        quitterGame.setBackground(pref.getCurrentForegroundColor());
+        quitterGame.setForeground(pref.getCurrentBackgroundColor());
+        goToScores.setBorder(new LineBorder(pref.getCurrentBackgroundColor(), 5));
+        quitterGame.setBorder(new LineBorder(pref.getCurrentBackgroundColor(), 5));
         for (Card card : cards) {
             card.setBackground(pref.getCurrentBackgroundColor());
         }
+    }
+
+    public void changeViewEndGame () {
+        Preferences pref = Preferences.getData();
+        endOfGame.setBackground(pref.getCurrentBackgroundColor());
+        endOfGame.setForeground(pref.getCurrentForegroundColor());
+        remove(jp2);
+        endOfGame.add(imageFin);
+        messageFin = new JPanel();
+        messageFin.setLayout(new BorderLayout());
+        messageFin.setBackground(pref.getCurrentBackgroundColor());
+        textMsg.setText("<html>Vous avez fini la partie avec " + nbPoints + " points<br> en un temps de " + minute + " minute(s) et " + seconde + " seconde(s)</html>");
+        textMsg.setFont(new Font("Georgia", Font.BOLD, 30));
+        textMsg.setBackground(pref.getCurrentBackgroundColor());
+        textMsg.setForeground(pref.getCurrentForegroundColor());
+        textMsg.setHorizontalAlignment(SwingConstants.HORIZONTAL);
+        messageFin.add(textMsg, BorderLayout.CENTER);
+        boutonsFin.setLayout(new GridLayout(0, 2));
+        goToScores.setBackground(pref.getCurrentForegroundColor());
+        goToScores.setBorder(new LineBorder(pref.getCurrentBackgroundColor(), 5));
+        goToScores.setFont(new Font("Georgia", 1, 40));
+        goToScores.setForeground(pref.getCurrentBackgroundColor());
+        goToScores.addActionListener(this);
+        quitterGame.setBackground(pref.getCurrentForegroundColor());
+        quitterGame.setBorder(new LineBorder(pref.getCurrentBackgroundColor(), 5));
+        quitterGame.setFont(new Font("Georgia", 1, 40));
+        quitterGame.setForeground(pref.getCurrentBackgroundColor());
+        quitterGame.addActionListener(this);
+        boutonsFin.add(goToScores);
+        boutonsFin.add(quitterGame);
+        goToScores.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        quitterGame.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        quitterGame.addActionListener(new QuitterJeuSoloListener());
+        messageFin.add(boutonsFin, BorderLayout.SOUTH);
+        endOfGame.add(messageFin);
+        add(endOfGame, BorderLayout.CENTER);
     }
 
 
@@ -201,11 +280,20 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         nomJoueur.setFont(f);
         scoreJoueur.setFont(f);
         timer.setFont(f);
+        messageFin.setFont(f);
+        textMsg.setFont(f);
+        boutonsFin.setFont(f);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        // toujours stopper la voix avant de parler
+        voix.stop();
+        // on récupère la source de l'évènement
+        Object source = e.getSource();
+        // on redonne le focus au JFrame principal
+        // (après un clic, le focus est sur le bouton)
+        this.requestFocus();
     }
 
     public class CardsListener implements ActionListener {
@@ -224,9 +312,12 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
                     returnedCards.add(selectedCards.get(0));
                     returnedCards.add(selectedCards.get(1));
                     selectedCards = new ArrayList<Card>();
-                    nbReturnedCards += 2;
-                    if(nbReturnedCards == nbCards) {
-                        System.out.println("end of game");
+                    nbPoints += pointsSuccess;
+                    if (nbPoints < 0) nbPoints = 0;
+                    scoreJoueur.setText("Score : " + nbPoints);
+                    if(returnedCards.size() == nbCards) {
+                        chrono.stop();
+                        changeViewEndGame();
                     }
                 } else {
                     List<Card> disabledCards = new ArrayList<>();
@@ -237,6 +328,9 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
                             c.setDisabledIcon(new ImageIcon(c.dosCarte));
                         }
                     }
+                    nbPoints += pointsFail;
+                    if (nbPoints < 0) nbPoints = 0;
+                    scoreJoueur.setText("Score : " + nbPoints);
                     int delay = 2000;
                     java.util.Timer timer = new java.util.Timer();
                     timer.schedule(new TimerTask() {
@@ -255,6 +349,34 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
                 }
             }
             requestFocus();
+        }
+    }
+
+    private class ChronoListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+                seconde++;
+                if(seconde==60) {
+                    seconde = 0;
+                    minute++;
+                }
+            if (minute < 10 && seconde < 10) {
+                timer.setText("0"+minute + ":" + "0"+seconde);
+            } else if (minute < 10) {
+                timer.setText("0"+minute + ":" + seconde);
+            } else if (seconde < 10) {
+                timer.setText(minute + ":" + "0" + seconde);
+            } else {
+                timer.setText(minute + ":" + seconde);
+            }
+        }
+    }
+
+    private class QuitterJeuSoloListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dispose();
         }
     }
 }
