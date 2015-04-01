@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class JeuSolo extends FenetreAbstraite implements ActionListener {
 
-    private static int minute=0,seconde=0;
+    private int minute,seconde;
     private JPanel jp1, jp2;
     private JLabel nomJoueur;
     private JLabel scoreJoueur;
@@ -47,6 +47,8 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
     // appel au constructeur de la classe mère
     public JeuSolo(String title, int nbCards) {
         super(title);
+        minute = 0;
+        seconde = 0;
         this.pointsFail = -1;
         switch(nbCards) {
             case 12: this.pointsSuccess = 3; break;
@@ -146,8 +148,8 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
 
     public void setPairCards() {
         Stack<String> images = new Stack<>();
-        images.add("../ressources/images/girafe.jpg");
-        images.add("../ressources/images/girafe.jpg");
+        images.add("../ressources/images/singe.jpg");
+        images.add("../ressources/images/singe.jpg");
         images.add("../ressources/images/vache.jpg");
         images.add("../ressources/images/vache.jpg");
         images.add("../ressources/images/chevre.jpg");
@@ -270,8 +272,6 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         messageFin.add(boutonsFin, BorderLayout.SOUTH);
         endOfGame.add(messageFin);
         add(endOfGame, BorderLayout.CENTER);
-        minute = 0;
-        seconde = 0;
     }
 
 

@@ -167,8 +167,8 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
 
     public void setPairCards () {
         Stack<String> images = new Stack<>();
-        images.add("../ressources/images/girafe.jpg");
-        images.add("../ressources/images/girafe.jpg");
+        images.add("../ressources/images/chat.jpg");
+        images.add("../ressources/images/chat.jpg");
         images.add("../ressources/images/lion.jpg");
         images.add("../ressources/images/lion.jpg");
 
