@@ -11,13 +11,21 @@ public class Card extends JButton {
 
     private boolean visible = false;
     private String image = "../ressources/images/dosCarte.jpg";
+    private String sonCard;
 
     public Card() {
         super(new ImageIcon(dosCarte));
     }
 
+    public String getSon() {
+        return this.sonCard;
+    }
     public boolean isReady() {
         return image.equals(dosCarte);
+    }
+
+    public void setSonCard (String son) {
+        this.sonCard = son;
     }
 
     public void turn() {

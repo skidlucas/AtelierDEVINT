@@ -150,32 +150,34 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
 
 
     public void setPairCards() {
-        Stack<String> images = new Stack<>();
-        images.add("../ressources/images/singe.jpg");
-        images.add("../ressources/images/singe.jpg");
-        images.add("../ressources/images/vache.jpg");
-        images.add("../ressources/images/vache.jpg");
-        images.add("../ressources/images/chevre.jpg");
-        images.add("../ressources/images/chevre.jpg");
-        images.add("../ressources/images/hibou.jpg");
-        images.add("../ressources/images/hibou.jpg");
-        images.add("../ressources/images/loup.jpg");
-        images.add("../ressources/images/loup.jpg");
-        images.add("../ressources/images/lion.jpg");
-        images.add("../ressources/images/lion.jpg");
-        images.add("../ressources/images/ours.jpg");
-        images.add("../ressources/images/ours.jpg");
-        images.add("../ressources/images/elephant.jpg");
-        images.add("../ressources/images/elephant.jpg");
-        images.add("../ressources/images/chiot.jpg");
-        images.add("../ressources/images/chiot.jpg");
-        images.add("../ressources/images/chat.jpg");
-        images.add("../ressources/images/chat.jpg");
-        images.add("../ressources/images/dauphin.jpg");
-        images.add("../ressources/images/dauphin.jpg");
-        images.add("../ressources/images/cheval.jpg");
-        images.add("../ressources/images/cheval.jpg");
+        String pathImage = "../ressources/images/";
+        String pathSon = "../ressources/sons/";
 
+        Stack<String> images = new Stack<>();
+        images.add("loup");
+        images.add("loup");
+        images.add("vache");
+        images.add("vache");
+        images.add("dauphin");
+        images.add("dauphin");
+        images.add("chien");
+        images.add("chien");
+        images.add("ours");
+        images.add("ours");
+        images.add("elephant");
+        images.add("elephant");
+        images.add("cheval");
+        images.add("cheval");
+        images.add("chevre");
+        images.add("chevre");
+        images.add("singe");
+        images.add("singe");
+        images.add("hibou");
+        images.add("hibou");
+        images.add("chat");
+        images.add("chat");
+        images.add("lion");
+        images.add("lion");
 
         Random random = new Random();
         for (int i = 0; i < nbCards; i++) {
@@ -184,9 +186,9 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
                 rand = random.nextInt(nbCards);
             } while (!cards.get(rand).isReady());
 
-            cards.get(rand).setImage(images.pop());
+            cards.get(rand).setImage(pathImage + images.peek() + ".jpg");
+            cards.get(rand).setSonCard(pathSon + images.pop() + ".wav");
         }
-
     }
 
     // évènements clavier
@@ -341,6 +343,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Card sourceCard = (Card) e.getSource();
             sourceCard.turn();
+            voix.playWav(sourceCard.getSon());
             sourceCard.setEnabled(false);
             sourceCard.setDisabledIcon(new ImageIcon(sourceCard.getImage()));
             selectedCards.add(sourceCard);

@@ -169,12 +169,14 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
     }
 
     public void setPairCards () {
-        Stack<String> images = new Stack<>();
-        images.add("../ressources/images/chat.jpg");
-        images.add("../ressources/images/chat.jpg");
-        images.add("../ressources/images/lion.jpg");
-        images.add("../ressources/images/lion.jpg");
+        String pathImage = "../ressources/images/";
+        String pathSon = "../ressources/sons/";
 
+        Stack<String> images = new Stack<>();
+        images.add("chat");
+        images.add("chat");
+        images.add("lion");
+        images.add("lion");
 
         Random random = new Random();
         for (int i = 0; i < nbCards; i++) {
@@ -183,7 +185,8 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
                 rand = random.nextInt(nbCards);
             } while (!cards.get(rand).isReady());
 
-            cards.get(rand).setImage(images.pop());
+            cards.get(rand).setImage(pathImage+images.peek()+".jpg");
+            cards.get(rand).setSonCard(pathSon+images.pop()+".wav");
         }
     }
  
@@ -284,6 +287,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             Card sourceCard = (Card) e.getSource();
             sourceCard.turn();
+            voix.playWav(sourceCard.getSon());
             sourceCard.setEnabled(false);
             sourceCard.setDisabledIcon(new ImageIcon(sourceCard.getImage()));
             selectedCards.add(sourceCard);
