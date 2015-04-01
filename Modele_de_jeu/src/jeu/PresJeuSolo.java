@@ -29,6 +29,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
     private JButton bouton;
     private JPanel jp1, jp2, jp3;
 
+    int selectedCard = 0;
     private List<Card> selectedCards;
     private int nbReturnedCards;
     private int nbCards;
@@ -41,7 +42,8 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
      }
 
     public void initCards(int nbCards) {
-        selectedCards = new ArrayList<Card>();
+        selectedCard = 0;
+        selectedCards = new ArrayList<>();
         nbReturnedCards = 0;
         cards = new ArrayList<>();
         for (int i = 0; i < nbCards; i++) {
@@ -145,6 +147,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         this.add(jp2);
         bouton.setVisible(false);
 
+        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor()));
         setPairCards();
     }
 
@@ -192,6 +195,45 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
     	if (e.getKeyCode()==KeyEvent.VK_F5){
     	   	voix.playText("Vous venez d'appuyer sur EFFE 5");
     	}
+
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (nbReturnedCards == nbCards) {
+                bouton.doClick();
+            } else {
+                cards.get(selectedCard).doClick();
+            }
+        }
+
+        // Toujours 3 lignes
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            // Supprime la border actuel
+            cards.get(selectedCard).setBorder(null);
+            selectedCard -= (nbCards/3);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            // Supprime la border actuel
+            cards.get(selectedCard).setBorder(null);
+            --selectedCard;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            // Supprime la border actuel
+            cards.get(selectedCard).setBorder(null);
+            selectedCard += (nbCards/3);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            // Supprime la border actuel
+            cards.get(selectedCard).setBorder(null);
+            ++selectedCard;
+        }
+
+        if (selectedCard < 0) {
+            selectedCard = 0;
+        }
+        if (selectedCard >= nbCards) {
+            selectedCard = nbCards-1;
+        }
+
+        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor()));
     }
     
 	/**
@@ -251,7 +293,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
                     selectedCards.get(0).setDisabledIcon(new ImageIcon(selectedCards.get(0).getImage()));
                     selectedCards.get(1).setEnabled(false);
                     selectedCards.get(1).setDisabledIcon(new ImageIcon(selectedCards.get(0).getImage()));
-                    selectedCards = new ArrayList<Card>();
+                    selectedCards = new ArrayList<>();
                     nbReturnedCards += 2;
                     if(nbReturnedCards == nbCards) {
                         bouton.setVisible(true);

@@ -29,6 +29,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
     private JLabel scoreJoueur;
     private JLabel timer;
     private int nbPoints;
+    int selectedCard = 0;
     private List<Card> returnedCards;
     private List<Card> selectedCards;
     private int nbCards;
@@ -47,6 +48,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
     // appel au constructeur de la classe mère
     public JeuSolo(String title, int nbCards) {
         super(title);
+        selectedCard = 0;
         minute = 0;
         seconde = 0;
         this.pointsFail = -1;
@@ -142,6 +144,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
 
         this.add(jp2, BorderLayout.CENTER);
 
+        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor()));
         setPairCards();
     }
 
@@ -194,6 +197,41 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         if (e.getKeyCode() == KeyEvent.VK_F5) {
             voix.playText("Vous venez d'appuyer sur EFFE 5");
         }
+
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            cards.get(selectedCard).doClick();
+        }
+
+        // Toujours 3 lignes
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            // Supprime la border actuel
+            cards.get(selectedCard).setBorder(null);
+            selectedCard -= (nbCards/3);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            // Supprime la border actuel
+            cards.get(selectedCard).setBorder(null);
+            --selectedCard;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            // Supprime la border actuel
+            cards.get(selectedCard).setBorder(null);
+            selectedCard += (nbCards/3);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            // Supprime la border actuel
+            cards.get(selectedCard).setBorder(null);
+            ++selectedCard;
+        }
+
+        if (selectedCard < 0) {
+            selectedCard = 0;
+        }
+        if (selectedCard >= nbCards) {
+            selectedCard = nbCards-1;
+        }
+
+        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor()));
     }
 
     /**
