@@ -9,7 +9,6 @@
 package jeu; 
 
 import devintAPI.MenuAbstrait;
-import jeu.view.Options;
 
 import javax.swing.*;
 

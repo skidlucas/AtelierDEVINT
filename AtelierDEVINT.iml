@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="SI_VOX" level="project" />
+    <orderEntry type="library" name="gson-2.3.1" level="project" />
   </component>
 </module>
