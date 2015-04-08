@@ -38,6 +38,18 @@ public class Profil implements Serializable{
         return score;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCouleur(String couleur) {
+        this.couleur = couleur;
+    }
+
+    public void setTaille(String taille) {
+        this.taille = taille;
+    }
+
     /*List<Profil> allProfil = new ArrayList<>();
         Profil lucas = new Profil("Lucas","Bleu", "High", 90);
         Profil pascal = new Profil("Pascal","Orange", "Small", 180);

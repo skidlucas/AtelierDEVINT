@@ -163,4 +163,11 @@ public class Preferences {
 		return voix;
 	}
 
+    public void setCurrentSetOfColor(int currentSetOfColor) {
+        this.currentSetOfColor = currentSetOfColor;
+    }
+
+    public void setCurrentSize(int currentSize) {
+        this.currentSize = currentSize;
+    }
 }

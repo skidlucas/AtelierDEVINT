@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
+import javafx.scene.control.ComboBox;
 import jeu.model.Profil;
 
 import javax.swing.*;
@@ -25,11 +26,16 @@ public class Options extends FenetreAbstraite{
     private JPanel options;
     private JPanel buttons;
 
+    private String[] colors = {"Orange","Bleu", "Noir"};
+    private String[] sizes = {"Petite","Moyenne","Grande"};
+
     private JLabel nom;
     private JLabel lNom;
     private JTextField fieldNom;
     private JLabel lTaille;
     private JLabel lCouleur;
+    private JComboBox couleur;
+    private JComboBox taille;
 
     private GridBagLayout placement; // le layout
     private GridBagConstraints regles; // les regles de placement
@@ -52,25 +58,12 @@ public class Options extends FenetreAbstraite{
     public Options(String title) {
         super(title);
         parser = new Gson();
-        chargeJson();
+        initJson();
         init();
     }
 
-    private void chargeJson(){
-        String res = new String();
-        String ligne = new String();
-        allProfils = new ArrayList<Profil>();
-        try {
-            BufferedReader buf = new BufferedReader(new FileReader("../ressources/json/profils.json"));
-            while((ligne = buf.readLine()) != null){
-                res += ligne;
-            }
-            buf.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        java.lang.reflect.Type type = (new TypeToken<ArrayList<Profil>>(){}).getType();
-        allProfils = parser.fromJson(res, type);
+    private void initJson(){
+        allProfils = Utils.chargeJson();
         indProf = 0;
         currentProf = allProfils.get(indProf);
     }
@@ -132,10 +125,14 @@ public class Options extends FenetreAbstraite{
     private void createForm(){
         options = new JPanel();
 
+        ActionListener comboListener = new comboListener();
+
         fieldNom = new JTextField();
         fieldNom.setText(currentProf.getName());
-        JComboBox couleur = new JComboBox();
-        JComboBox taille = new JComboBox();
+        couleur = new JComboBox(colors);
+        couleur.addActionListener(comboListener);
+        taille = new JComboBox(sizes);
+        taille.addActionListener(comboListener);
         lNom = new JLabel("Nom :");
         lNom.setFont(pref.getCurrentFont());
         lCouleur = new JLabel("Couleur :");
@@ -161,6 +158,7 @@ public class Options extends FenetreAbstraite{
         buttons = new JPanel();
         save = new JButton("Sauver");
         save.setFont(pref.getCurrentFont());
+        save.addActionListener(new submitListener());
         quit = new JButton("Quitter");
         quit.setFont(pref.getCurrentFont());
         buttons.setLayout(new FlowLayout());
@@ -188,7 +186,7 @@ public class Options extends FenetreAbstraite{
     }
     @Override
     public void changeColor() {
-        Preferences pref = Preferences.getData();
+        pref = Preferences.getData();
         this.getContentPane().setBackground(pref.getCurrentBackgroundColor());
         this.getContentPane().setForeground(pref.getCurrentForegroundColor());
         profil.setBackground(pref.getCurrentBackgroundColor());
@@ -197,7 +195,6 @@ public class Options extends FenetreAbstraite{
         options.setForeground(pref.getCurrentForegroundColor());
         buttons.setBackground(pref.getCurrentBackgroundColor());
         buttons.setForeground(pref.getCurrentForegroundColor());
-
     }
 
     @Override
@@ -227,6 +224,66 @@ public class Options extends FenetreAbstraite{
             }
             currentProf = allProfils.get(indProf);
             refreshChamp();
+        }
+    }
+
+    public class comboListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JComboBox cbTmp = (JComboBox)e.getSource();
+            String value = cbTmp.getSelectedItem().toString();
+            if(e.getSource() == couleur){
+                switch (value){
+                    case "Orange":{
+                        pref.setCurrentSetOfColor(1);
+                        break;
+                    }
+                    case "Bleu":{
+                        pref.setCurrentSetOfColor(2);
+                        break;
+                    }
+                    case "Noir":{
+                        pref.setCurrentSetOfColor(0);
+                        break;
+                    }
+                }
+                pref.getData().changeColor();
+                System.out.println(pref.getCurrentBackgroundColor());
+            } else {
+                switch (value){
+                    case "Petite":{
+                        pref.setCurrentSize(100);
+                        break;
+                    }
+                    case "Moyenne":{
+                        pref.setCurrentSize(30);
+                        break;
+                    }
+                    case "Grande":{
+                        pref.setCurrentSize(70);
+                        break;
+                    }
+                }
+                pref.getData().changeSize();
+            }
+        }
+    }
+
+    public class submitListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Profil tmp = new Profil(fieldNom.getText(),
+                                    couleur.getSelectedItem().toString(),
+                                    taille.getSelectedItem().toString(),
+                                    currentProf.getScore());
+
+            allProfils.remove(indProf);
+            allProfils.add(tmp);
+            currentProf = tmp;
+            indProf = allProfils.size() - 1;
+            Utils.writeJson(allProfils);
         }
     }
 }
