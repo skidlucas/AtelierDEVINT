@@ -82,7 +82,8 @@ public abstract class DevintFrameListener extends JFrame implements KeyListener 
     	}
     	// F1 = regle du jeu
     	if (e.getKeyCode()==KeyEvent.VK_F1){
-    		voix.playWav(wavRegleJeu());
+            voix.stop();
+    		voix.playText("Le but du jeu est de trouver des paires de cartes identiques");
     	}
 		// F3 = on passe à la couleur suivante dans le jeu des 
     	// couleurs défini dans Preferences
