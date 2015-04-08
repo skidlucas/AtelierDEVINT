@@ -356,6 +356,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
                     returnedCards.add(selectedCards.get(0));
                     returnedCards.add(selectedCards.get(1));
                     selectedCards = new ArrayList<Card>();
+                    voix.playWav("../ressources/sons/reussite.wav", true);
                     nbPoints += pointsSuccess;
                     if (nbPoints < 0) nbPoints = 0;
                     scoreJoueur.setText("Score : " + nbPoints);
@@ -365,6 +366,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
                     }
                 } else {
                     List<Card> disabledCards = new ArrayList<>();
+                    voix.playWav("../ressources/sons/echec.wav", true);
                     for (Card c : cards) {
                         if (!selectedCards.contains(c) && !returnedCards.contains(c)) {
                             disabledCards.add(c);

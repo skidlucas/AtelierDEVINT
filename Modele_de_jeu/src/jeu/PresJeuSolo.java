@@ -300,6 +300,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
                     selectedCards.get(1).setEnabled(false);
                     selectedCards.get(1).setDisabledIcon(new ImageIcon(selectedCards.get(0).getImage()));
                     selectedCards = new ArrayList<>();
+                    voix.playWav("../ressources/sons/reussite.wav", true);
                     nbReturnedCards += 2;
                     if(nbReturnedCards == nbCards) {
                         bouton.setVisible(true);
@@ -308,6 +309,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
                         bouton.addActionListener(new startGameListener());
                     }
                 } else {
+                    voix.playWav("../ressources/sons/echec.wav", true);
                     List<Card> disabledCards = new ArrayList<>();
                     for (Card c : cards) {
                         if (!selectedCards.contains(c)) {
