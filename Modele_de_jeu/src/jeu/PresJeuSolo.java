@@ -39,6 +39,8 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
     public PresJeuSolo(String title) {
     	super(title);
         init();
+        voix.stop();
+        voix.playText("Mode solo. Trouvez les deux paires de carte pour pouvoir commencer la partie !");
      }
 
     public void initCards(int nbCards) {

@@ -115,7 +115,7 @@ public abstract class MenuAbstrait extends DevintFrameListener implements
     	// a le focus
     	this.requestFocus();
 		// lit le message d'accueil
-		voix.playWav(wavAccueil());
+		voix.playText("Bienvenue sur le jeu PolyCards !");
  
 	}
 
@@ -267,7 +267,7 @@ public abstract class MenuAbstrait extends DevintFrameListener implements
 
 	// mettre le focus sur une option
 	private void setFocusedButton(int i) {
-		voix.playShortText(boutonOption[i].getText());
+		//voix.playShortText(boutonOption[i].getText());
 		boutonOption[i].setBackground(backgroundColor);
 		boutonOption[i].setForeground(foregroundColor);
 	}
