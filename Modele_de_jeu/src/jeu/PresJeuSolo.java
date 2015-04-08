@@ -289,8 +289,8 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             Card sourceCard = (Card) e.getSource();
             sourceCard.turn();
-            voix.playWav(sourceCard.getSon());
-            sourceCard.setEnabled(false);
+            voix.playWav(sourceCard.getSon(), true);
+            sourceCard.setEnsteabled(false);
             sourceCard.setDisabledIcon(new ImageIcon(sourceCard.getImage()));
             selectedCards.add(sourceCard);
             if (selectedCards.size() == 2) {

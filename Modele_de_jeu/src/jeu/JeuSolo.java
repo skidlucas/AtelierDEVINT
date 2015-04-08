@@ -343,7 +343,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Card sourceCard = (Card) e.getSource();
             sourceCard.turn();
-            voix.playWav(sourceCard.getSon());
+            voix.playWav(sourceCard.getSon(), true);
             sourceCard.setEnabled(false);
             sourceCard.setDisabledIcon(new ImageIcon(sourceCard.getImage()));
             selectedCards.add(sourceCard);
