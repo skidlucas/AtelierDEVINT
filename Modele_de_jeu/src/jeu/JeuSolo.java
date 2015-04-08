@@ -243,7 +243,9 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         messageFin = new JPanel();
         messageFin.setLayout(new BorderLayout());
         messageFin.setBackground(pref.getCurrentBackgroundColor());
-        textMsg.setText("<html>Vous avez fini la partie avec " + nbPoints + " points<br> en un temps de " + minute + " minute(s) et " + seconde + " seconde(s)</html>");
+        String msgEnd = "<html>Vous avez fini la partie avec " + Integer.toString(nbPoints) + " points<br> en" + Integer.toString(minute) + " minute(s) et" + Integer.toString(seconde) + " seconde(s)</html>\"";
+        voix.playText(msgEnd);
+        textMsg.setText("<html>Vous avez fini la partie avec " + nbPoints + " points<br> en " + minute + " minute(s) et " + seconde + " seconde(s)</html>");
         textMsg.setFont(new Font("Georgia", Font.BOLD, 30));
         textMsg.setBackground(pref.getCurrentBackgroundColor());
         textMsg.setForeground(pref.getCurrentForegroundColor());
@@ -268,6 +270,8 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         messageFin.add(boutonsFin, BorderLayout.SOUTH);
         endOfGame.add(messageFin);
         add(endOfGame, BorderLayout.CENTER);
+        minute = 0;
+        seconde = 0;
     }
 
 

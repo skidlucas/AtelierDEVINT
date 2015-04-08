@@ -143,6 +143,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         jp2.add(text, BorderLayout.NORTH);
         jp2.add(bouton, BorderLayout.SOUTH);
         this.add(jp2);
+        bouton.setVisible(false);
 
         setPairCards();
     }
@@ -156,7 +157,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
      	// si c'est le bouton "question" on lit la question
      	// le contenu des questions est variable donc on les lit avec SI_VOX
     	if (source.equals(bouton)) {
-    		String text = "Vous avez appuyé sur le bouton";
+    		String text = "Vous avez appuyé sur le bouton commencer";
     		voix.playText(text);
     	}
     	// on redonne le focus au JFrame principal
@@ -253,6 +254,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
                     selectedCards = new ArrayList<Card>();
                     nbReturnedCards += 2;
                     if(nbReturnedCards == nbCards) {
+                        bouton.setVisible(true);
                         bouton.addActionListener(new startGameListener());
                     }
                 } else {
