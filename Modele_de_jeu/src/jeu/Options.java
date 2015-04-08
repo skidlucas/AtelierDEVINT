@@ -60,6 +60,7 @@ public class Options extends FenetreAbstraite{
         parser = new Gson();
         initJson();
         init();
+        refreshChamp();
     }
 
     private void initJson(){
@@ -160,6 +161,7 @@ public class Options extends FenetreAbstraite{
         save.setFont(pref.getCurrentFont());
         save.addActionListener(new submitListener());
         quit = new JButton("Quitter");
+        quit.addActionListener(new submitListener());
         quit.setFont(pref.getCurrentFont());
         buttons.setLayout(new FlowLayout());
         buttons.add(save);
@@ -195,6 +197,10 @@ public class Options extends FenetreAbstraite{
         options.setForeground(pref.getCurrentForegroundColor());
         buttons.setBackground(pref.getCurrentBackgroundColor());
         buttons.setForeground(pref.getCurrentForegroundColor());
+        lCouleur.setForeground(pref.getCurrentForegroundColor());
+        lTaille.setForeground(pref.getCurrentForegroundColor());
+        lNom.setForeground(pref.getCurrentForegroundColor());
+        nom.setForeground(pref.getCurrentForegroundColor());
     }
 
     @Override
@@ -206,21 +212,32 @@ public class Options extends FenetreAbstraite{
         lNom.setFont(f);
         save.setFont(f);
         quit.setFont(f);
+        couleur.setFont(f);
+        taille.setFont(f);
+        fieldNom.setFont(f);
     }
 
     private void refreshChamp(){
         fieldNom.setText(currentProf.getName());
         nom.setText(currentProf.getName());
+        couleur.setSelectedItem(currentProf.getCouleur());
+        taille.setSelectedItem(currentProf.getTaille());
     }
 
     public class changeListener implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if((e.getSource() == droite) && indProf + 1 < allProfils.size()){
+            if(e.getSource() == droite){
                 indProf++;
-            } else if(e.getSource() == gauche && indProf - 1 >= 0){
+                if(indProf >= allProfils.size()){
+                    indProf = 0;
+                }
+            } else if(e.getSource() == gauche) {
                 indProf--;
+                if(indProf < 0){
+                    indProf = allProfils.size() - 1;
+                }
             }
             currentProf = allProfils.get(indProf);
             refreshChamp();
@@ -249,7 +266,6 @@ public class Options extends FenetreAbstraite{
                     }
                 }
                 pref.getData().changeColor();
-                System.out.println(pref.getCurrentBackgroundColor());
             } else {
                 switch (value){
                     case "Petite":{
@@ -274,16 +290,20 @@ public class Options extends FenetreAbstraite{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Profil tmp = new Profil(fieldNom.getText(),
-                                    couleur.getSelectedItem().toString(),
-                                    taille.getSelectedItem().toString(),
-                                    currentProf.getScore());
+            if(e.getSource() == save){
+                Profil tmp = new Profil(fieldNom.getText(),
+                        couleur.getSelectedItem().toString(),
+                        taille.getSelectedItem().toString(),
+                        currentProf.getScore());
 
-            allProfils.remove(indProf);
-            allProfils.add(tmp);
-            currentProf = tmp;
-            indProf = allProfils.size() - 1;
-            Utils.writeJson(allProfils);
+                allProfils.remove(indProf);
+                allProfils.add(tmp);
+                currentProf = tmp;
+                indProf = allProfils.size() - 1;
+                Utils.writeJson(allProfils);
+            } else {
+                dispose();
+            }
         }
     }
 }
