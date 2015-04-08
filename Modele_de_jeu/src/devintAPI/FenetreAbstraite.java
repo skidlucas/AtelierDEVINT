@@ -54,7 +54,9 @@ public abstract class FenetreAbstraite extends  DevintFrameListener{
     	super.keyPressed(e);
     	// on ajoute la gestion de l'aide quand on presse F2
     	if (e.getKeyCode()==KeyEvent.VK_F2){
-    		voix.playWav(wavAide());
+            voix.stop();
+    		voix.playText("Vous pouvez utiliser la souris ou le clavier pour jouer. " +
+                    "Appuyez sur EFFE 3 pour changer la couleur, sur EFFE 4 pour changer de taille et EFFE 5 pour changer de voi");
     	}
     }
 
