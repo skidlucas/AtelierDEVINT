@@ -303,6 +303,8 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
                     nbReturnedCards += 2;
                     if(nbReturnedCards == nbCards) {
                         bouton.setVisible(true);
+                        voix.stop();
+                        voix.playText("Appuyez maintenant sur le bouton commencer pour lancer la partie");
                         bouton.addActionListener(new startGameListener());
                     }
                 } else {
