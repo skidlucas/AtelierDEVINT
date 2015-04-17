@@ -144,8 +144,8 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
 
         this.add(jp2, BorderLayout.CENTER);
 
-        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor()));
-        setPairCards();
+        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor(), 6));
+                setPairCards();
     }
 
 
@@ -233,7 +233,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
             selectedCard = nbCards-1;
         }
 
-        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor()));
+        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor(), 6));
     }
 
     /**
