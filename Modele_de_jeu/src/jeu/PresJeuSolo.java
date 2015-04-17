@@ -289,6 +289,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             Card sourceCard = (Card) e.getSource();
             sourceCard.turn();
+            voix.forceStop();
             voix.playWav(sourceCard.getSon(), true);
             sourceCard.setEnabled(false);
             sourceCard.setDisabledIcon(new ImageIcon(sourceCard.getImage()));
@@ -304,7 +305,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
                     nbReturnedCards += 2;
                     if(nbReturnedCards == nbCards) {
                         bouton.setVisible(true);
-                        voix.stop();
+                        voix.forceStop();
                         voix.playText("Appuyez maintenant sur le bouton commencer pour lancer la partie");
                         bouton.addActionListener(new startGameListener());
                     }
