@@ -3,6 +3,7 @@ package jeu;
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
 import jeu.model.Card;
+import jeu.model.Profil;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -18,8 +19,8 @@ import java.util.List;
  * Created by user on 17/04/2015.
  */
 public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
-    private JComboBox themesList;
-    private JLabel theme;
+    private JComboBox themesList, firstProfil, secondProfil;
+    private JLabel theme, profil1, profil2;
     private JButton bouton;
     private JPanel jp1, jp2, jp3;
 
@@ -54,14 +55,35 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         Color backgroundColor = pref.getCurrentBackgroundColor();
         setLayout(new GridLayout(3, 0));
         jp1 = new JPanel();
-        jp1.setLayout(new GridLayout(2, 2));
+        jp1.setLayout(new GridLayout(0, 2));
         jp1.setBackground(backgroundColor);
 
         jp2 = new JPanel();
-        jp2.setLayout(new BorderLayout());
         jp2.setBackground(backgroundColor);
 
+        List<Profil> allProfiles = Utils.chargeJson();
+        String[] allNames = new String[allProfiles.size()];
+        for (int i = 0; i < allProfiles.size(); i++) {
+            allNames[i] = allProfiles.get(i).getName();
+        }
+        firstProfil = new JComboBox(allNames);
+        firstProfil.setSelectedIndex(0);
+        firstProfil.setEditable(false);
+        firstProfil.setFont(new Font("Georgia", 1, 30));
+        firstProfil.setBackground(backgroundColor);
+        firstProfil.setForeground(foregroundColor);
+        firstProfil.addActionListener(this);
+
+        profil1 = new JLabel("Choisir le profil du joueur 1");
+        profil1.setHorizontalAlignment(SwingConstants.CENTER);
+        profil1.setFont(new Font("Georgia", Font.BOLD, 30));
+        profil1.setForeground(foregroundColor);
+
+        jp2.add(profil1);
+        jp2.add(firstProfil);
+
         jp3 = new JPanel();
+        jp3.setLayout(new BorderLayout());
         jp3.setBackground(backgroundColor);
 
 
@@ -74,7 +96,8 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         themesList.setForeground(foregroundColor);
         themesList.addActionListener(this);
 
-        theme = new JLabel("Choisir un thème ci-dessous");
+        theme = new JLabel("Choisir un thème parmi les suivants");
+        theme.setHorizontalAlignment(SwingConstants.CENTER);
         theme.setFont(new Font("Georgia", Font.BOLD, 30));
         theme.setForeground(foregroundColor);
 
@@ -87,11 +110,9 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         jp1.add(theme);
         jp1.add(themesList);
         this.add(jp1);
-
-        this.add(jp3);
-        jp2.add(bouton, BorderLayout.SOUTH);
         this.add(jp2);
-        bouton.setVisible(false);
+        jp3.add(bouton, BorderLayout.SOUTH);
+        this.add(jp3);
     }
 
     // lire la question si clic sur le bouton
