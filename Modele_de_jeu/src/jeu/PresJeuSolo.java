@@ -113,11 +113,11 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         difficultesList.setForeground(foregroundColor);
         difficultesList.addActionListener(this);
 
-        theme = new JLabel("Thème");
+        theme = new JLabel("Choisir thème");
         theme.setFont(new Font("Georgia", Font.BOLD, 30));
         theme.setForeground(foregroundColor);
 
-        difficulte = new JLabel("Difficulté");
+        difficulte = new JLabel("Choisir difficulté");
         difficulte.setFont(new Font("Georgia", Font.BOLD, 30));
         difficulte.setForeground(foregroundColor);
 
