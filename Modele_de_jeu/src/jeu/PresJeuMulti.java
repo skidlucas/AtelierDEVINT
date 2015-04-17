@@ -74,7 +74,7 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         firstProfil.setForeground(foregroundColor);
         firstProfil.addActionListener(this);
 
-        profil1 = new JLabel("Choisir le profil du joueur 1");
+        profil1 = new JLabel("Choisir le profil du joueur 1:");
         profil1.setHorizontalAlignment(SwingConstants.CENTER);
         profil1.setFont(new Font("Georgia", Font.BOLD, 30));
         profil1.setForeground(foregroundColor);
@@ -96,7 +96,7 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         themesList.setForeground(foregroundColor);
         themesList.addActionListener(this);
 
-        theme = new JLabel("Choisir un thème parmi les suivants");
+        theme = new JLabel("Choisir un thème parmi les suivants:");
         theme.setHorizontalAlignment(SwingConstants.CENTER);
         theme.setFont(new Font("Georgia", Font.BOLD, 30));
         theme.setForeground(foregroundColor);
