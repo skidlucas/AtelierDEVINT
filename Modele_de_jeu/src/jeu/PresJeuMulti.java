@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
     private JComboBox themesList;
-    private JLabel theme, text;
+    private JLabel theme;
     private JButton bouton;
     private JPanel jp1, jp2, jp3;
 
@@ -74,7 +74,7 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         themesList.setForeground(foregroundColor);
         themesList.addActionListener(this);
 
-        theme = new JLabel("Choisir thème");
+        theme = new JLabel("Choisir un thème ci-dessous");
         theme.setFont(new Font("Georgia", Font.BOLD, 30));
         theme.setForeground(foregroundColor);
 
@@ -84,17 +84,11 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         bouton.setForeground(backgroundColor);
         bouton.addActionListener(this);
 
-        text = new JLabel("Trouvez les paires de cartes pour pouvoir commencer");
-        text.setFont(new Font("Georgia", Font.BOLD, 30));
-        text.setForeground(foregroundColor);
-        text.setHorizontalAlignment(SwingConstants.HORIZONTAL);
-
         jp1.add(theme);
         jp1.add(themesList);
         this.add(jp1);
 
         this.add(jp3);
-        jp2.add(text, BorderLayout.NORTH);
         jp2.add(bouton, BorderLayout.SOUTH);
         this.add(jp2);
         bouton.setVisible(false);
@@ -149,7 +143,6 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         theme.setForeground(pref.getCurrentForegroundColor());
         bouton.setBackground(pref.getCurrentForegroundColor());
         bouton.setForeground(pref.getCurrentBackgroundColor());
-        text.setForeground(pref.getCurrentForegroundColor());
     }
 
 
@@ -160,7 +153,6 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         Font f = Preferences.getData().getCurrentFont();
         themesList.setFont(f);
         theme.setFont(f);
-        text.setFont(f);
     }
 
     private class startGameListener implements ActionListener {
