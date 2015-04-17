@@ -361,6 +361,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
                     if (nbPoints < 0) nbPoints = 0;
                     scoreJoueur.setText("Score : " + nbPoints);
                     if(returnedCards.size() == nbCards) {
+                        voix.forceStop();
                         chrono.stop();
                         changeViewEndGame();
                     }
