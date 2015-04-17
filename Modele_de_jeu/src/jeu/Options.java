@@ -241,6 +241,7 @@ public class Options extends FenetreAbstraite{
             }
             currentProf = allProfils.get(indProf);
             refreshChamp();
+            requestFocus();
         }
     }
 
@@ -283,6 +284,7 @@ public class Options extends FenetreAbstraite{
                 }
                 pref.getData().changeSize();
             }
+            requestFocus();
         }
     }
 
@@ -304,6 +306,7 @@ public class Options extends FenetreAbstraite{
             } else {
                 dispose();
             }
+            requestFocus();
         }
     }
 }
