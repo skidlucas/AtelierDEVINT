@@ -18,34 +18,16 @@ import java.util.List;
  * Created by user on 17/04/2015.
  */
 public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
-    private JComboBox themesList, difficultesList;
-    private JLabel theme, difficulte, text;
+    private JComboBox themesList;
+    private JLabel theme, text;
     private JButton bouton;
     private JPanel jp1, jp2, jp3;
 
-    int selectedCard = 0;
-    private List<Card> selectedCards;
-    private int nbReturnedCards;
-    private int nbCards;
-    private List<Card> cards;
     public PresJeuMulti(String title) {
         super(title);
         init();
         voix.stop();
         voix.playText("Mode multijoueur. Choisissez vos profils et le thème avant de lancer la partie.");
-    }
-
-    public void initCards(int nbCards) {
-        selectedCard = 0;
-        selectedCards = new ArrayList<>();
-        nbReturnedCards = 0;
-        cards = new ArrayList<>();
-        for (int i = 0; i < nbCards; i++) {
-            Card card = new Card();
-            card.setBackground(Preferences.getData().getCurrentBackgroundColor());
-            card.setBorder(null);
-            cards.add(card);
-        }
     }
 
     // renvoie le fichier wave contenant le message d'accueil
@@ -66,9 +48,6 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
     // définition de la méthode abstraite "init()"
     // initialise le frame
     protected void init() {// on récupère les couleurs de base dans la classe Preferences
-        nbCards = 4;
-        initCards(nbCards);
-
         bouton = new JButton("Commencer");
         Preferences pref = Preferences.getData();
         Color foregroundColor = pref.getCurrentForegroundColor();
@@ -83,7 +62,6 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         jp2.setBackground(backgroundColor);
 
         jp3 = new JPanel();
-        jp3.setLayout(new GridLayout(0,nbCards));
         jp3.setBackground(backgroundColor);
 
 
@@ -96,22 +74,9 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         themesList.setForeground(foregroundColor);
         themesList.addActionListener(this);
 
-        String[] difficultes = {"Facile", "Moyen", "Difficile"};
-        difficultesList = new JComboBox(difficultes);
-        difficultesList.setSelectedIndex(0);
-        difficultesList.setEditable(false);
-        difficultesList.setFont(new Font("Georgia", 1, 30));
-        difficultesList.setBackground(backgroundColor);
-        difficultesList.setForeground(foregroundColor);
-        difficultesList.addActionListener(this);
-
         theme = new JLabel("Choisir thème");
         theme.setFont(new Font("Georgia", Font.BOLD, 30));
         theme.setForeground(foregroundColor);
-
-        difficulte = new JLabel("Choisir difficulté");
-        difficulte.setFont(new Font("Georgia", Font.BOLD, 30));
-        difficulte.setForeground(foregroundColor);
 
         bouton.setBackground(foregroundColor);
         bouton.setBorder(new LineBorder(Color.BLACK, 5));
@@ -126,23 +91,13 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
 
         jp1.add(theme);
         jp1.add(themesList);
-        jp1.add(difficulte);
-        jp1.add(difficultesList);
         this.add(jp1);
-
-        for (Card card : cards) {
-            card.addActionListener(new CardsListener());
-            jp3.add(card);
-        }
 
         this.add(jp3);
         jp2.add(text, BorderLayout.NORTH);
         jp2.add(bouton, BorderLayout.SOUTH);
         this.add(jp2);
         bouton.setVisible(false);
-
-        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor()));
-        setPairCards();
     }
 
     // lire la question si clic sur le bouton
@@ -162,27 +117,6 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         this.requestFocus();
     }
 
-    public void setPairCards () {
-        String pathImage = "../ressources/images/";
-        String pathSon = "../ressources/sons/";
-
-        Stack<String> images = new Stack<>();
-        images.add("chat");
-        images.add("chat");
-        images.add("lion");
-        images.add("lion");
-
-        Random random = new Random();
-        for (int i = 0; i < nbCards; i++) {
-            int rand;
-            do {
-                rand = random.nextInt(nbCards);
-            } while (!cards.get(rand).isReady());
-
-            cards.get(rand).setImage(pathImage+images.peek()+".jpg");
-            cards.get(rand).setSonCard(pathSon+images.pop()+".wav");
-        }
-    }
 
     // évènements clavier
     public void keyPressed(KeyEvent e) {
@@ -192,45 +126,6 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         if (e.getKeyCode()==KeyEvent.VK_F5){
             voix.playText("Vous venez d'appuyer sur EFFE 5");
         }
-
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (nbReturnedCards == nbCards) {
-                bouton.doClick();
-            } else {
-                cards.get(selectedCard).doClick();
-            }
-        }
-
-        // Toujours 3 lignes
-        if (e.getKeyCode() == KeyEvent.VK_UP) {
-            // Supprime la border actuel
-            cards.get(selectedCard).setBorder(null);
-            selectedCard -= (nbCards/3);
-        }
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            // Supprime la border actuel
-            cards.get(selectedCard).setBorder(null);
-            --selectedCard;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            // Supprime la border actuel
-            cards.get(selectedCard).setBorder(null);
-            selectedCard += (nbCards/3);
-        }
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            // Supprime la border actuel
-            cards.get(selectedCard).setBorder(null);
-            ++selectedCard;
-        }
-
-        if (selectedCard < 0) {
-            selectedCard = 0;
-        }
-        if (selectedCard >= nbCards) {
-            selectedCard = nbCards-1;
-        }
-
-        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor()));
     }
 
     /**
@@ -245,8 +140,6 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         Preferences pref = Preferences.getData();
         themesList.setBackground(pref.getCurrentBackgroundColor());
         themesList.setForeground(pref.getCurrentForegroundColor());
-        difficultesList.setBackground(pref.getCurrentBackgroundColor());
-        difficultesList.setForeground(pref.getCurrentForegroundColor());
         jp1.setBackground(pref.getCurrentBackgroundColor());
         jp1.setForeground(pref.getCurrentForegroundColor());
         jp2.setBackground(pref.getCurrentBackgroundColor());
@@ -254,14 +147,9 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         jp3.setBackground(pref.getCurrentBackgroundColor());
         jp3.setForeground(pref.getCurrentForegroundColor());
         theme.setForeground(pref.getCurrentForegroundColor());
-        difficulte.setForeground(pref.getCurrentForegroundColor());
         bouton.setBackground(pref.getCurrentForegroundColor());
         bouton.setForeground(pref.getCurrentBackgroundColor());
         text.setForeground(pref.getCurrentForegroundColor());
-
-        for (Card card : cards) {
-            card.setBackground(pref.getCurrentBackgroundColor());
-        }
     }
 
 
@@ -271,76 +159,13 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
     public void changeSize(){
         Font f = Preferences.getData().getCurrentFont();
         themesList.setFont(f);
-        difficultesList.setFont(f);
         theme.setFont(f);
-        difficulte.setFont(f);
         text.setFont(f);
-    }
-
-    public class CardsListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            Card sourceCard = (Card) e.getSource();
-            sourceCard.turn();
-            voix.playWav(sourceCard.getSon(), true);
-            sourceCard.setEnabled(false);
-            sourceCard.setDisabledIcon(new ImageIcon(sourceCard.getImage()));
-            selectedCards.add(sourceCard);
-            if (selectedCards.size() == 2) {
-                if (selectedCards.get(0).getImage().equals(selectedCards.get(1).getImage())) {
-                    selectedCards.get(0).setEnabled(false);
-                    selectedCards.get(0).setDisabledIcon(new ImageIcon(selectedCards.get(0).getImage()));
-                    selectedCards.get(1).setEnabled(false);
-                    selectedCards.get(1).setDisabledIcon(new ImageIcon(selectedCards.get(0).getImage()));
-                    selectedCards = new ArrayList<>();
-                    voix.playWav("../ressources/sons/reussite.wav", true);
-                    nbReturnedCards += 2;
-                    if(nbReturnedCards == nbCards) {
-                        bouton.setVisible(true);
-                        voix.stop();
-                        voix.playText("Appuyez maintenant sur le bouton commencer pour lancer la partie");
-                        bouton.addActionListener(new startGameListener());
-                    }
-                } else {
-                    voix.playWav("../ressources/sons/echec.wav", true);
-                    List<Card> disabledCards = new ArrayList<>();
-                    for (Card c : cards) {
-                        if (!selectedCards.contains(c)) {
-                            disabledCards.add(c);
-                            c.setEnabled(false);
-                            c.setDisabledIcon(new ImageIcon(c.dosCarte));
-                        }
-                    }
-                    int delay = 2000;
-                    java.util.Timer timer = new java.util.Timer();
-                    timer.schedule(new TimerTask() {
-                        public void run() {
-                            selectedCards.get(0).turn();
-                            selectedCards.get(0).setEnabled(true);
-                            selectedCards.get(1).turn();
-                            selectedCards.get(1).setEnabled(true);
-                            selectedCards = new ArrayList<Card>();
-                            for (Card c : disabledCards) {
-                                c.setEnabled(true);
-                            }
-                        }
-                    }, delay);
-
-                }
-            }
-            requestFocus();
-        }
     }
 
     private class startGameListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            String difficulte = (String)difficultesList.getSelectedItem();
-            int cardsForGame = 0;
-            switch (difficulte) {
-                case "Facile": cardsForGame = 12; break;
-                case "Moyen": cardsForGame = 18; break;
-                case "Difficile": cardsForGame = 24; break;
-            }
-            JeuSolo frameSoloGame = new JeuSolo("Partie Solo", cardsForGame);
+            JeuMulti frameSoloGame = new JeuMulti("Jeu Multi");
             dispose();
         }
     }
