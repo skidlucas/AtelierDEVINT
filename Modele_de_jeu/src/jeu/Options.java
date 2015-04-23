@@ -302,7 +302,7 @@ public class Options extends FenetreAbstraite{
                 allProfils.add(tmp);
                 currentProf = tmp;
                 indProf = allProfils.size() - 1;
-                Utils.writeJson(allProfils);
+                Utils.writeJson(allProfils, Utils.profilFilename);
             } else {
                 dispose();
             }

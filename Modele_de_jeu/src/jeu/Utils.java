@@ -2,7 +2,6 @@ package jeu;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 import jeu.model.Profil;
 import jeu.scores.Score;
 
@@ -56,10 +55,10 @@ public class Utils {
         return tmp;
     }
 
-    public static void writeJson(List<?> list){
+    public static void writeJson(List<?> list, String filename){
         String res = parser.toJson(list);
         try {
-            PrintWriter out = new PrintWriter (new BufferedWriter(new FileWriter(profilFilename)));
+            PrintWriter out = new PrintWriter (new BufferedWriter(new FileWriter(filename)));
             out.println(res);
             out.close();
         } catch (Exception e) {
