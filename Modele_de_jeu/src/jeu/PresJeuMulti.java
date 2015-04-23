@@ -19,10 +19,14 @@ import java.util.Timer;
  * Created by Nicolas HORY on 17/04/2015.
  */
 public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
-        private JComboBox themesList;
+        private JComboBox themesList, profils1, profils2;
         private JLabel theme, text;
         private JButton bouton;
         private JPanel jp1, jp2, jp3;
+        private JPanel panelProfil1;
+        private JPanel panelProfil2;
+        private JLabel textProfil1;
+        private JLabel textProfil2;
 
        // appel au constructeur de la classe mère
         public PresJeuMulti(String title) {
@@ -73,31 +77,39 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
                 allNames[i] = allProfiles.get(i).getName();
             }
 
-            JPanel panelProfil1 = new JPanel();
+            panelProfil1 = new JPanel();
             panelProfil1.setLayout(new GridLayout(0, 2));
-            JLabel textProfil1 = new JLabel("Choisir le profil 1 :");
-            JComboBox<String> profils = new JComboBox(allNames);
-            profils.setSelectedIndex(0);
-            profils.setEditable(false);
-            profils.setFont(new Font("Georgia", 1, 30));
-            profils.setBackground(backgroundColor);
-            profils.setForeground(foregroundColor);
-            profils.addActionListener(this);
+            textProfil1 = new JLabel("Choisir le joueur 1 :");
+            textProfil1.setFont(new Font("Georgia", Font.BOLD, 30));
+            textProfil1.setForeground(foregroundColor);
+            panelProfil1.setBackground(backgroundColor);
+
+            profils1 = new JComboBox(allNames);
+            profils1.setSelectedIndex(0);
+            profils1.setEditable(false);
+            profils1.setFont(new Font("Georgia", 1, 30));
+            profils1.setBackground(backgroundColor);
+            profils1.setForeground(foregroundColor);
+            profils1.addActionListener(this);
             panelProfil1.add(textProfil1);
-            panelProfil1.add(profils);
+            panelProfil1.add(profils1);
             jp3.add(panelProfil1);
 
 
-            JComboBox<String> profils2 = new JComboBox(allNames);
+            profils2 = new JComboBox(allNames);
             profils2.setSelectedIndex(0);
             profils2.setEditable(false);
             profils2.setFont(new Font("Georgia", 1, 30));
             profils2.setBackground(backgroundColor);
             profils2.setForeground(foregroundColor);
             profils2.addActionListener(this);
-            JPanel panelProfil2 = new JPanel();
+            panelProfil2 = new JPanel();
             panelProfil2.setLayout(new GridLayout(0, 2));
-            JLabel textProfil2 = new JLabel("Choisir le profil 2 :");
+            textProfil2 = new JLabel("Choisir le joueur 2 :");
+            textProfil2.setFont(new Font("Georgia", Font.BOLD, 30));
+            textProfil2.setForeground(foregroundColor);
+            panelProfil2.setBackground(backgroundColor);
+
             panelProfil2.add(textProfil2);
             panelProfil2.add(profils2);
             jp3.add(panelProfil2);
@@ -179,7 +191,15 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
             theme.setForeground(pref.getCurrentForegroundColor());
             bouton.setBackground(pref.getCurrentForegroundColor());
             bouton.setForeground(pref.getCurrentBackgroundColor());
-            text.setForeground(pref.getCurrentForegroundColor());
+            textProfil1.setForeground(pref.getCurrentForegroundColor());
+            textProfil2.setForeground(pref.getCurrentForegroundColor());
+            panelProfil1.setBackground(pref.getCurrentBackgroundColor());
+            panelProfil2.setBackground(pref.getCurrentBackgroundColor());
+            profils1.setBackground(pref.getCurrentBackgroundColor());
+            profils2.setBackground(pref.getCurrentBackgroundColor());
+            profils1.setForeground(pref.getCurrentForegroundColor());
+            profils2.setForeground(pref.getCurrentForegroundColor());
+
         }
 
 
@@ -190,6 +210,10 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
             Font f = Preferences.getData().getCurrentFont();
             themesList.setFont(f);
             theme.setFont(f);
+            textProfil1.setFont(f);
+            textProfil2.setFont(f);
+            profils1.setFont(f);
+            profils2.setFont(f);
         }
 
         private class startGameListener implements ActionListener {
