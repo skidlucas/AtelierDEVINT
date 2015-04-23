@@ -218,8 +218,14 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
 
         private class startGameListener implements ActionListener {
             public void actionPerformed(ActionEvent e) {
-                JeuMulti frameMultiGame = new JeuMulti("Partie Solo");
-                dispose();
+                String nomJoueur1 =(String) profils1.getItemAt(profils1.getSelectedIndex());
+                String nomJoueur2 =(String) profils2.getItemAt(profils2.getSelectedIndex());
+                if (!nomJoueur1.equals(nomJoueur2)) {
+                    JeuMulti frameMultiGame = new JeuMulti("Partie Multi", nomJoueur1, nomJoueur2);
+                    dispose();
+                } else {
+                    voix.playText("Veuillez choisir deux profils différents pour pouvoir jouer en multijoueur");
+                }
             }
         }
     }
