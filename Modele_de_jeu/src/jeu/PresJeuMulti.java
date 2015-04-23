@@ -61,7 +61,7 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         jp2 = new JPanel();
         jp2.setBackground(backgroundColor);
 
-        List<Profil> allProfiles = Utils.chargeJson();
+        List<Profil> allProfiles = Utils.chargeJsonProfil();
         String[] allNames = new String[allProfiles.size()];
         for (int i = 0; i < allProfiles.size(); i++) {
             allNames[i] = allProfiles.get(i).getName();

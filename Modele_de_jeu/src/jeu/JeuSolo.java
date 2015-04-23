@@ -3,6 +3,8 @@ package jeu;
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
 import jeu.model.Card;
+import jeu.scores.Score;
+import jeu.scores.ScoreManager;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -22,6 +24,7 @@ import java.util.List;
  * @version 26/03/2015.
  */
 public class JeuSolo extends FenetreAbstraite implements ActionListener {
+    private ScoreManager scoreManager;
 
     private int minute,seconde;
     private JPanel jp1, jp2;
@@ -48,6 +51,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
     // appel au constructeur de la classe mère
     public JeuSolo(String title, int nbCards) {
         super(title);
+        scoreManager = new ScoreManager();
         selectedCard = 0;
         minute = 0;
         seconde = 0;
@@ -364,6 +368,13 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
                     if(returnedCards.size() == nbCards) {
                         voix.forceStop();
                         chrono.stop();
+
+                        // Add score in json file
+                        /**
+                         * @todo change NOM_DU_JOUEUR
+                         */
+                        scoreManager.add(new Score("NOM_DU_JOUEUUR", nbPoints, timer.getText()));
+
                         changeViewEndGame();
                     }
                 } else {
