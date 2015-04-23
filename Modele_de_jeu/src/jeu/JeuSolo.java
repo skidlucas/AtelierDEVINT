@@ -144,8 +144,8 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
 
         this.add(jp2, BorderLayout.CENTER);
 
-        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor()));
-        setPairCards();
+        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor(), 6));
+                setPairCards();
     }
 
 
@@ -233,7 +233,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
             selectedCard = nbCards-1;
         }
 
-        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor()));
+        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor(), 6));
     }
 
     /**
@@ -343,6 +343,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Card sourceCard = (Card) e.getSource();
             sourceCard.turn();
+            voix.forceStop();
             voix.playWav(sourceCard.getSon(), true);
             sourceCard.setEnabled(false);
             sourceCard.setDisabledIcon(new ImageIcon(sourceCard.getImage()));
@@ -361,6 +362,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
                     if (nbPoints < 0) nbPoints = 0;
                     scoreJoueur.setText("Score : " + nbPoints);
                     if(returnedCards.size() == nbCards) {
+                        voix.forceStop();
                         chrono.stop();
                         changeViewEndGame();
                     }

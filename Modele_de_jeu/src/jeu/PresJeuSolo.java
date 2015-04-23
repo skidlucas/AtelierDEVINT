@@ -113,11 +113,11 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         difficultesList.setForeground(foregroundColor);
         difficultesList.addActionListener(this);
 
-        theme = new JLabel("Thème");
+        theme = new JLabel("Choisir thème");
         theme.setFont(new Font("Georgia", Font.BOLD, 30));
         theme.setForeground(foregroundColor);
 
-        difficulte = new JLabel("Difficulté");
+        difficulte = new JLabel("Choisir difficulté");
         difficulte.setFont(new Font("Georgia", Font.BOLD, 30));
         difficulte.setForeground(foregroundColor);
 
@@ -149,7 +149,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         this.add(jp2);
         bouton.setVisible(false);
 
-        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor()));
+        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor(), 6));
         setPairCards();
     }
 
@@ -238,7 +238,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
             selectedCard = nbCards-1;
         }
 
-        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor()));
+        cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor(), 6));
     }
     
 	/**
@@ -289,6 +289,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             Card sourceCard = (Card) e.getSource();
             sourceCard.turn();
+            voix.forceStop();
             voix.playWav(sourceCard.getSon(), true);
             sourceCard.setEnabled(false);
             sourceCard.setDisabledIcon(new ImageIcon(sourceCard.getImage()));
@@ -304,7 +305,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
                     nbReturnedCards += 2;
                     if(nbReturnedCards == nbCards) {
                         bouton.setVisible(true);
-                        voix.stop();
+                        voix.forceStop();
                         voix.playText("Appuyez maintenant sur le bouton commencer pour lancer la partie");
                         bouton.addActionListener(new startGameListener());
                     }
