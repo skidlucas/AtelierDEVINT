@@ -20,7 +20,7 @@ public class Utils {
         String ligne = new String();
         List<Profil> tmp = new ArrayList<Profil>();
         try {
-            BufferedReader buf = new BufferedReader(new FileReader("../ressources/json/profils.json"));
+            BufferedReader buf = new BufferedReader(new FileReader("../ressources/profils.json"));
             while ((ligne = buf.readLine()) != null) {
                 res += ligne;
             }
@@ -37,7 +37,7 @@ public class Utils {
     public static void writeJson(List<Profil> allProfils){
         String res = parser.toJson(allProfils);
         try {
-            PrintWriter out = new PrintWriter (new BufferedWriter(new FileWriter("../ressources/json/profils.json")));
+            PrintWriter out = new PrintWriter (new BufferedWriter(new FileWriter("../ressources/profils.json")));
             out.println(res);
             out.close();
         } catch (Exception e) {
