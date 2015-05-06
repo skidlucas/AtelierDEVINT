@@ -18,14 +18,10 @@ public class Score implements Comparable {
     public int compareTo(Object o) {
         Score s = (Score)o;
         if (nbPoint == s.getNbPoint()) {
-            return time.compareTo(s.getTime());
+            return s.getTime().compareTo(time);
         }
 
         return nbPoint.compareTo(s.getNbPoint());
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getNbPoint() {

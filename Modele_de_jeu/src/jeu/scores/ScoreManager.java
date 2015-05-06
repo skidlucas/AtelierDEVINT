@@ -25,7 +25,7 @@ public class ScoreManager {
     }
 
     public void trier(List<Score> listScores) {
-        Collections.sort(listScores);
+        Collections.sort(listScores, Collections.reverseOrder());
         limitListScores();
     }
 
