@@ -10,7 +10,7 @@ import java.util.List;
  * Created by user on 23/04/2015.
  */
 public class ScoreManager {
-    private final int NB_MAX_SCORES = 10;
+    public static final int NB_MAX_SCORES = 10;
     private List<Score> scores;
 
     public ScoreManager() {
