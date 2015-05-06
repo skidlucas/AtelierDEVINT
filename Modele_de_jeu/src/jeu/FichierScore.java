@@ -22,6 +22,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import devintAPI.FenetreAbstraite;
+import devintAPI.Preferences;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -39,16 +40,13 @@ import java.io.IOException;
 
 public class FichierScore extends FenetreAbstraite implements ActionListener{
 
-	// le bouton pour créer un fichier
-	// doit être accessible dans la méthode actionPerformed 
-	private JButton ecrire;
-
-	// le bouton pour lire un fichier
-	private JButton lire;
+	private JButton quitter; // Le bouton pour quitter
+    private JTextArea lb1;
 
 	// appel au constructeur de la classe mère
     public FichierScore(String title) {
     	super(title);
+        init();
      }
 
     // définition de la méthode abstraite "init()"
@@ -66,35 +64,28 @@ public class FichierScore extends FenetreAbstraite implements ActionListener{
        	text+= "Le code est dans jeu.Fichier.java\n";
       	text += "Lisez le code de la méthode actionPerformed.";
 
-     	JTextArea lb1 = new JTextArea (text); 
+     	lb1 = new JTextArea (text);
     	lb1.setLineWrap(true);
     	lb1.setEditable(false);
     	lb1.setFont(new Font("Georgia",1,30));
     	// on place le premier composant en bas
     	this.add(lb1,BorderLayout.CENTER);
-    	
-    	// bouton pour lancer l'écriture dans le fichier
-    	ecrire = new JButton();
-    	ecrire.setText("Cliquer pour écrire le fichier des scores");
-    	ecrire.setBackground(new Color(255,105,180));
-    	ecrire.setBorder(new LineBorder(Color.BLACK,5));
-     	ecrire.setFont(new Font("Georgia",1,40));
-     	// c'est l'objet Jeu lui-même qui réagit au clic souris
-       	ecrire.addActionListener(this);
-    	// on met le bouton en haut
-     	this.add(ecrire,BorderLayout.NORTH);
-     	
+
+     	Preferences pref = Preferences.getData();
+        lb1.setBackground(pref.getCurrentBackgroundColor());
+        lb1.setForeground(pref.getCurrentForegroundColor());
+
+
       	// bouton pour lancer la lecture dans le fichier
-    	lire = new JButton();
-    	lire.setText("Cliquer pour lire le fichier");
-    	lire.setBackground(new Color(55,34,255));
-    	lire.setForeground(new Color(250,250,210));
-    	lire.setBorder(new LineBorder(Color.BLACK,10));
-    	lire.setFont(new Font("Georgia",1,40));
+    	quitter = new JButton();
+    	quitter.setText("Quitter la page des scores");
+    	quitter.setBackground(pref.getCurrentForegroundColor());
+        quitter.setForeground(pref.getCurrentBackgroundColor());
+    	quitter.setFont(new Font("Georgia",1,40));
      	// c'est l'objet Jeu lui-même qui réagit au clic souris
-    	lire.addActionListener(this);
+    	quitter.addActionListener(new CloseListener());
     	// on met le bouton en haut
-     	this.add(lire,BorderLayout.SOUTH);
+     	this.add(quitter,BorderLayout.SOUTH);
      	
    }
 
@@ -105,7 +96,8 @@ public class FichierScore extends FenetreAbstraite implements ActionListener{
     	// on récupère la source de l'évènement
      	Object source = ae.getSource();
      	// si c'est le bouton "ecrire" 
-    	if (source.equals(ecrire)) {
+    	/**
+        if (source.equals(ecrire)) {
     		String text = "Ecriture des scores dans le fichier ressources slache sons slache scores point té ix té.";
     		voix.playText(text);
     		String chemin = ".." + File.separator + "ressources" + File.separator + "score.txt";
@@ -145,8 +137,8 @@ public class FichierScore extends FenetreAbstraite implements ActionListener{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    	}	
-
+    	}
+         **/
     	
     	// on redonne le focus au JFrame principal 
     	// (après un clic, le focus est sur le bouton)
@@ -155,10 +147,25 @@ public class FichierScore extends FenetreAbstraite implements ActionListener{
 
 	@Override
 	public void changeColor() {
+        Preferences currentPref = Preferences.getData();
+        quitter.setBackground(currentPref.getCurrentForegroundColor());
+        quitter.setForeground(currentPref.getCurrentBackgroundColor());
+        lb1.setBackground(currentPref.getCurrentBackgroundColor());
+        lb1.setForeground(currentPref.getCurrentForegroundColor());
 	}
+
+    private class CloseListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dispose();
+        }
+    }
 	
 	@Override
 	public void changeSize() {
+        Font f = Preferences.getData().getCurrentFont();
+        lb1.setFont(f);
+        quitter.setFont(f);
 	}
 
 	// renvoie le fichier wave contenant le message d'accueil
