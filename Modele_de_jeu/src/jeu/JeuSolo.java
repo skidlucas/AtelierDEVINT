@@ -22,7 +22,7 @@ import java.util.List;
  * @author Nicolas HORY
  * @version 26/03/2015.
  */
-public class JeuSolo extends FenetreAbstraite implements ActionListener {
+public class JeuSolo extends FenetreAbstraite {
     private ScoreManager scoreManager;
 
     private Profil currentProfil = new Profil();
@@ -306,12 +306,11 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         goToScores.setBorder(new LineBorder(pref.getCurrentBackgroundColor(), 5));
         goToScores.setFont(new Font("Georgia", 1, 40));
         goToScores.setForeground(pref.getCurrentBackgroundColor());
-        goToScores.addActionListener(this);
+        goToScores.addActionListener(new ScoreListener());
         quitterGame.setBackground(pref.getCurrentForegroundColor());
         quitterGame.setBorder(new LineBorder(pref.getCurrentBackgroundColor(), 5));
         quitterGame.setFont(new Font("Georgia", 1, 40));
         quitterGame.setForeground(pref.getCurrentBackgroundColor());
-        quitterGame.addActionListener(this);
         boutonsFin.add(goToScores);
         boutonsFin.add(quitterGame);
         goToScores.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -334,17 +333,6 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         messageFin.setFont(f);
         textMsg.setFont(f);
         boutonsFin.setFont(f);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // toujours stopper la voix avant de parler
-        voix.stop();
-        // on récupère la source de l'évènement
-        Object source = e.getSource();
-        // on redonne le focus au JFrame principal
-        // (après un clic, le focus est sur le bouton)
-        this.requestFocus();
     }
 
     public class CardsListener implements ActionListener {
@@ -432,6 +420,13 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         }
     }
 
+    private class ScoreListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dispose();
+            FichierScore scores = new FichierScore("Meilleurs scores");
+        }
+    }
     private class QuitterJeuSoloListener implements ActionListener {
 
         @Override

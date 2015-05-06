@@ -38,7 +38,7 @@ public class MenuJeu extends MenuAbstrait {
             case 0 : new PresJeuSolo(nomJeu);break;
             case 1 : new PresJeuMulti(nomJeu);break;
             case 2 : new Options("Options");break;
-            case 3 : new FichierScore("Scores");break;
+            case 3 : new FichierScore("Meilleurs Scores");break;
             case 4 : System.exit(0);
 		default: System.err.println("action non définie");
 		}
