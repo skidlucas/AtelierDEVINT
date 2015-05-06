@@ -7,8 +7,7 @@ import jeu.model.Profil;
 import jeu.scores.Score;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by user on 05/04/2015.
@@ -17,6 +16,9 @@ public class Utils {
     public static final String profilFilename = "../ressources/profils.json";
     public static final String scoresFilename = "../ressources/scores.json";
     public static Gson parser = new Gson();
+    public static final List<String> themes = new ArrayList<>(Arrays.asList("Animaux", "Fruits", "Caracteres chinois"));
+
+    private Utils() {}
 
     public static List<Profil> chargeJsonProfil() {
         String res = new String();
@@ -111,5 +113,58 @@ public class Utils {
             }
         }
         pref.changeSize();
+    }
+
+    public static Queue<String> getContent(String themePath) {
+        Queue<String> content = new LinkedList<>();
+        File dir = new File(themePath);
+        if (dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    content.offer(getNameWithoutExt(file));
+                    content.offer(getNameWithoutExt(file));
+                }
+            }
+        }
+
+        return content;
+    }
+
+    private static String getNameWithoutExt(File f) {
+        String name = f.getName();
+
+        final int lastPeriodPos = name.lastIndexOf('.');
+        if (lastPeriodPos > 0) {
+            name = name.substring(0, lastPeriodPos);
+        }
+
+        return name;
+    }
+
+    public static String getPath(String type, String theme) {
+        String path;
+        if ("SOUND".equals(type.toUpperCase())) {
+            path = "../ressources/sons/";
+        } else {
+            path = "../ressources/images/";
+        }
+
+        switch (theme.toUpperCase()) {
+            case "FRUITS":
+                path += "fruits/";
+                break;
+
+            case "CARACTERES CHINOIS":
+                path += "chinois/";
+                break;
+
+            case "ANIMAUX":
+            default:
+                path += "animal/";
+                break;
+        }
+
+        return path;
     }
 }

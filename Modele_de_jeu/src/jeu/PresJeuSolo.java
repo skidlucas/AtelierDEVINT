@@ -95,9 +95,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         jp3.setLayout(new GridLayout(0,nbCards));
         jp3.setBackground(backgroundColor);
 
-
-        String[] themes = {"Animaux", "Fruits", "Caractères chinois" };
-        themesList = new JComboBox(themes);
+        themesList = new JComboBox(Utils.themes.toArray());
         themesList.setSelectedIndex(0);
     	themesList.setEditable(false);
     	themesList.setFont(new Font("Georgia", 1, 30));
@@ -192,14 +190,10 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
     }
 
     public void setPairCards () {
-        String pathImage = "../ressources/images/";
-        String pathSon = "../ressources/sons/";
+        String pathImage = Utils.getPath("images", (String) themesList.getSelectedItem());
+        String pathSon = Utils.getPath("sound", (String) themesList.getSelectedItem());
 
-        Stack<String> images = new Stack<>();
-        images.add("chat");
-        images.add("chat");
-        images.add("lion");
-        images.add("lion");
+        Queue<String> images = Utils.getContent(pathImage);
 
         Random random = new Random();
         for (int i = 0; i < nbCards; i++) {
@@ -209,7 +203,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
             } while (!cards.get(rand).isReady());
 
             cards.get(rand).setImage(pathImage+images.peek()+".jpg");
-            cards.get(rand).setSonCard(pathSon+images.pop()+".wav");
+            cards.get(rand).setSonCard(pathSon+images.poll()+".wav");
         }
     }
  
