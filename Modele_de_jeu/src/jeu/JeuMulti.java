@@ -3,6 +3,7 @@ package jeu;
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
 import jeu.model.Card;
+import jeu.model.Profil;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 public class JeuMulti extends FenetreAbstraite implements ActionListener {
 
+    private Profil currentProfil = new Profil();
     private JPanel jp1, jp2, jp3;
     private JLabel nomJoueur1, nomJoueur2;
     private JLabel scoreJoueur1, scoreJoueur2;
@@ -145,6 +147,8 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
 
         this.add(jp2, BorderLayout.CENTER);
 
+        currentProfil = Utils.getProfilFromName(strNomJoueur1);
+        Utils.changeParam(currentProfil);
         cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor(), 6));
         setPairCards();
     }
@@ -251,10 +255,16 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
         jp1.setForeground(pref.getCurrentForegroundColor());
         jp2.setBackground(pref.getCurrentBackgroundColor());
         jp2.setForeground(pref.getCurrentForegroundColor());
+        jp3.setBackground(pref.getCurrentBackgroundColor());
+        jp3.setForeground(pref.getCurrentForegroundColor());
         scoreJoueur1.setBackground(pref.getCurrentBackgroundColor());
         scoreJoueur1.setForeground(pref.getCurrentForegroundColor());
+        scoreJoueur2.setBackground(pref.getCurrentBackgroundColor());
+        scoreJoueur2.setForeground(pref.getCurrentForegroundColor());
         nomJoueur1.setBackground(pref.getCurrentBackgroundColor());
         nomJoueur1.setForeground(pref.getCurrentForegroundColor());
+        nomJoueur2.setBackground(pref.getCurrentBackgroundColor());
+        nomJoueur2.setForeground(pref.getCurrentForegroundColor());
         endOfGame.setBackground(pref.getCurrentBackgroundColor());
         endOfGame.setForeground(pref.getCurrentForegroundColor());
         imageFin.setBackground(pref.getCurrentBackgroundColor());
@@ -274,7 +284,6 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
         }
     }
 
-    //@todo
     public void changeViewEndGame () {
         Preferences pref = Preferences.getData();
         endOfGame.setBackground(pref.getCurrentBackgroundColor());
@@ -323,6 +332,8 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
         Font f = Preferences.getData().getCurrentFont();
         nomJoueur1.setFont(f);
         scoreJoueur1.setFont(f);
+        nomJoueur2.setFont(f);
+        scoreJoueur2.setFont(f);
         messageFin.setFont(f);
         textMsg.setFont(f);
         boutonsFin.setFont(f);
@@ -405,9 +416,16 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
                             for (Card c : disabledCards) {
                                 c.setEnabled(true);
                             }
+                            tour = !tour;
+                            if (!tour) {
+                                currentProfil = Utils.getProfilFromName(strNomJoueur1);
+                            } else {
+                                currentProfil = Utils.getProfilFromName(strNomJoueur2);
+                            }
+                            Utils.changeParam(currentProfil);
+                            cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor(), 6));
                         }
                     }, delay);
-                    tour = !tour;
                 }
             }
             requestFocus();

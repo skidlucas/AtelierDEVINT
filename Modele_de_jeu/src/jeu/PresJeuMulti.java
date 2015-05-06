@@ -20,7 +20,7 @@ import java.util.Timer;
  */
 public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         private JComboBox themesList, profils1, profils2;
-        private JLabel theme, text;
+        private JLabel theme;
         private JButton bouton;
         private JPanel jp1, jp2, jp3;
         private JPanel panelProfil1;

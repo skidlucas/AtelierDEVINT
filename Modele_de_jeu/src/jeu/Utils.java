@@ -2,6 +2,7 @@ package jeu;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import devintAPI.Preferences;
 import jeu.model.Profil;
 
 import java.io.*;
@@ -43,5 +44,51 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static Profil getProfilFromName(String name) {
+        List<Profil> allProfiles = Utils.chargeJson();
+        for (Profil profil : allProfiles) {
+            if (profil.getName().equals(name))
+                return profil;
+        }
+        return null;
+    }
+
+    public static void changeParam(Profil profil) {
+        String couleur = profil.getCouleur();
+        String taille = profil.getTaille();
+        Preferences pref = Preferences.getData();
+
+        switch (couleur){
+            case "Orange":{
+                pref.setCurrentSetOfColor(1);
+                break;
+            }
+            case "Bleu":{
+                pref.setCurrentSetOfColor(2);
+                break;
+            }
+            case "Noir":{
+                pref.setCurrentSetOfColor(0);
+                break;
+            }
+        }
+        pref.changeColor();
+        switch (taille){
+            case "Petite":{
+                pref.setCurrentSize(100);
+                break;
+            }
+            case "Moyenne":{
+                pref.setCurrentSize(30);
+                break;
+            }
+            case "Grande":{
+                pref.setCurrentSize(70);
+                break;
+            }
+        }
+        pref.changeSize();
     }
 }

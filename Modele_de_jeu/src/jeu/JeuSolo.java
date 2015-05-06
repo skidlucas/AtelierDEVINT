@@ -3,6 +3,7 @@ package jeu;
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
 import jeu.model.Card;
+import jeu.model.Profil;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -23,6 +24,7 @@ import java.util.List;
  */
 public class JeuSolo extends FenetreAbstraite implements ActionListener {
 
+    private Profil currentProfil = new Profil();
     private String strNomJoueur;
     private int minute,seconde;
     private JPanel jp1, jp2;
@@ -146,8 +148,10 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
 
         this.add(jp2, BorderLayout.CENTER);
 
+        currentProfil = Utils.getProfilFromName(strNomJoueur);
+        Utils.changeParam(currentProfil);
         cards.get(selectedCard).setBorder(BorderFactory.createLineBorder(Preferences.getData().getCurrentForegroundColor(), 6));
-                setPairCards();
+        setPairCards();
     }
 
 

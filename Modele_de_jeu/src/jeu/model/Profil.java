@@ -1,5 +1,7 @@
 package jeu.model;
 
+import devintAPI.Preferences;
+
 import java.io.Serializable;
 
 /**
@@ -8,15 +10,16 @@ import java.io.Serializable;
 public class Profil implements Serializable{
 
     String name;
-
     String couleur;
-
     String taille;
 
     public Profil(String name, String couleur, String taille) {
         this.name = name;
         this.couleur = couleur;
         this.taille = taille;
+    }
+
+    public Profil() {
     }
 
     public String getName() {

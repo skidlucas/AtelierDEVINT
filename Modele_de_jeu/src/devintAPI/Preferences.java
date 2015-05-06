@@ -163,6 +163,10 @@ public class Preferences {
 		return voix;
 	}
 
+    public int getCurrentSetOfColor() {
+        return currentSetOfColor;
+    }
+
     public void setCurrentSetOfColor(int currentSetOfColor) {
         this.currentSetOfColor = currentSetOfColor;
     }
