@@ -68,7 +68,7 @@ public class Utils {
     }
 
     public static Profil getProfilFromName(String name) {
-        List<Profil> allProfiles = Utils.chargeJson();
+        List<Profil> allProfiles = Utils.chargeJsonProfil();
         for (Profil profil : allProfiles) {
             if (profil.getName().equals(name))
                 return profil;
