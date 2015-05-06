@@ -34,7 +34,6 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
     //tour = false => joueur 1, tour = true => joueur2
     private List<Card> cards;
     private JPanel endOfGame;
-    private JButton goToScores;
     private JButton quitterGame;
     private  JLabel imageFin;
     private JPanel messageFin;
@@ -87,7 +86,6 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
         messageFin = new JPanel();
         textMsg = new JLabel();
         imageFin = new JLabel(new ImageIcon("../ressources/images/finJeu.png"));
-        goToScores = new JButton("Scores");
         quitterGame = new JButton("Quitter");
         endOfGame = new JPanel();
         endOfGame.setLayout(new GridLayout(2,0));
@@ -155,7 +153,7 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
 
 
     public void setPairCards() {
-        String pathImage = "../ressources/images/";
+        String pathImage = "../ressources/images/animal/";
         String pathSon = "../ressources/sons/";
 
         Stack<String> images = new Stack<>();
@@ -273,11 +271,8 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
         messageFin.setForeground(pref.getCurrentForegroundColor());
         textMsg.setBackground(pref.getCurrentBackgroundColor());
         textMsg.setForeground(pref.getCurrentForegroundColor());
-        goToScores.setBackground(pref.getCurrentForegroundColor());
-        goToScores.setForeground(pref.getCurrentBackgroundColor());
         quitterGame.setBackground(pref.getCurrentForegroundColor());
         quitterGame.setForeground(pref.getCurrentBackgroundColor());
-        goToScores.setBorder(new LineBorder(pref.getCurrentBackgroundColor(), 5));
         quitterGame.setBorder(new LineBorder(pref.getCurrentBackgroundColor(), 5));
         for (Card card : cards) {
             card.setBackground(pref.getCurrentBackgroundColor());
@@ -303,23 +298,14 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
         textMsg.setForeground(pref.getCurrentForegroundColor());
         textMsg.setHorizontalAlignment(SwingConstants.HORIZONTAL);
         messageFin.add(textMsg, BorderLayout.CENTER);
-        boutonsFin.setLayout(new GridLayout(0, 2));
-        goToScores.setBackground(pref.getCurrentForegroundColor());
-        goToScores.setBorder(new LineBorder(pref.getCurrentBackgroundColor(), 5));
-        goToScores.setFont(new Font("Georgia", 1, 40));
-        goToScores.setForeground(pref.getCurrentBackgroundColor());
-        goToScores.addActionListener(this);
         quitterGame.setBackground(pref.getCurrentForegroundColor());
         quitterGame.setBorder(new LineBorder(pref.getCurrentBackgroundColor(), 5));
         quitterGame.setFont(new Font("Georgia", 1, 40));
         quitterGame.setForeground(pref.getCurrentBackgroundColor());
         quitterGame.addActionListener(this);
-        boutonsFin.add(goToScores);
-        boutonsFin.add(quitterGame);
-        goToScores.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         quitterGame.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         quitterGame.addActionListener(new QuitterJeuSoloListener());
-        messageFin.add(boutonsFin, BorderLayout.SOUTH);
+        messageFin.add(quitterGame, BorderLayout.SOUTH);
         endOfGame.add(messageFin);
         add(endOfGame, BorderLayout.CENTER);
     }

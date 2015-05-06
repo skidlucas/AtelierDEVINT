@@ -158,7 +158,7 @@ public class JeuSolo extends FenetreAbstraite {
 
 
     public void setPairCards() {
-        String pathImage = "../ressources/images/";
+        String pathImage = "../ressources/images/animal/";
         String pathSon = "../ressources/sons/";
 
         Stack<String> images = new Stack<>();
