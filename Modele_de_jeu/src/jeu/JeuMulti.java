@@ -39,9 +39,11 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
     private JPanel messageFin;
     private JLabel textMsg;
     private JPanel boutonsFin;
+    private String theme;
 
-    public JeuMulti(String title, String nomJoueur1, String nomJoueur2) {
+    public JeuMulti(String title, String nomJoueur1, String nomJoueur2, String theme) {
         super(title);
+        this.theme = theme;
         tour = false;
         this.strNomJoueur1 = nomJoueur1;
         this.strNomJoueur2 = nomJoueur2;
@@ -151,46 +153,21 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
         setPairCards();
     }
 
+    private void setPairCards () {
+        String pathImage = Utils.getPath("images", theme);
+        String pathSon = Utils.getPath("sound", theme);
 
-    public void setPairCards() {
-        String pathImage = "../ressources/images/animal/";
-        String pathSon = "../ressources/sons/";
-
-        Stack<String> images = new Stack<>();
-        images.add("loup");
-        images.add("loup");
-        images.add("vache");
-        images.add("vache");
-        images.add("dauphin");
-        images.add("dauphin");
-        images.add("chien");
-        images.add("chien");
-        images.add("ours");
-        images.add("ours");
-        images.add("elephant");
-        images.add("elephant");
-        images.add("cheval");
-        images.add("cheval");
-        images.add("chevre");
-        images.add("chevre");
-        images.add("singe");
-        images.add("singe");
-        images.add("hibou");
-        images.add("hibou");
-        images.add("chat");
-        images.add("chat");
-        images.add("lion");
-        images.add("lion");
-
+        Queue<String> images = Utils.getContent(pathImage);
         Random random = new Random();
         for (int i = 0; i < nbCards; i++) {
             int rand;
             do {
                 rand = random.nextInt(nbCards);
-            } while (!cards.get(rand).isReady());
+            } while (cards.get(rand).isReady(theme));
 
-            cards.get(rand).setImage(pathImage + images.peek() + ".jpg");
-            cards.get(rand).setSonCard(pathSon + images.pop() + ".wav");
+            cards.get(rand).setImage(pathImage+images.peek()+".jpg");
+            cards.get(rand).setSonCard(pathSon+images.poll()+".wav");
+            cards.get(rand).setTheme(theme);
         }
     }
 

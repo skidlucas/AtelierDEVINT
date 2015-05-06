@@ -114,8 +114,7 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         panelProfil2.add(profils2);
         jp3.add(panelProfil2);
 
-        String[] themes = {"Animaux", "Fruits", "Caractères chinois" };
-        themesList = new JComboBox(themes);
+        themesList = new JComboBox(Utils.themes.toArray());
         themesList.setSelectedIndex(0);
         themesList.setEditable(false);
         themesList.setFont(new Font("Georgia", 1, 30));
@@ -221,7 +220,7 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
             String nomJoueur1 =(String) profils1.getItemAt(profils1.getSelectedIndex());
             String nomJoueur2 =(String) profils2.getItemAt(profils2.getSelectedIndex());
             if (!nomJoueur1.equals(nomJoueur2)) {
-                JeuMulti frameMultiGame = new JeuMulti("Partie Multi", nomJoueur1, nomJoueur2);
+                JeuMulti frameMultiGame = new JeuMulti("Partie Multi", nomJoueur1, nomJoueur2, (String) themesList.getSelectedItem());
                 dispose();
             } else {
                 voix.playText("Veuillez choisir deux profils différents pour pouvoir jouer en multijoueur");
