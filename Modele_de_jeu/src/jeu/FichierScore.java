@@ -41,7 +41,8 @@ import java.io.IOException;
 public class FichierScore extends FenetreAbstraite implements ActionListener{
 
 	private JButton quitter; // Le bouton pour quitter
-    private JTextArea lb1;
+    private JPanel lb1;
+    private JLabel presNom, presScore; // Titre des colonnes
 
 	// appel au constructeur de la classe mère
     public FichierScore(String title) {
@@ -54,27 +55,27 @@ public class FichierScore extends FenetreAbstraite implements ActionListener{
     protected void init() {
     	// BorderLayout, voir http://java.sun.com/docs/books/tutorial/uiswing/layout/border.html
     	setLayout(new BorderLayout());
- 
-    	String text = "Jean-Paul a gagné, voici les scores :\n";
-    	text += "Jean-Paul 20\n";
-       	text +="Hélène : 15\n";
-		text +="Catherine : 16\n\n";
-    	text+= "Cliquez sur le bouton du haut et vérifiez si le fichier a été créé\n";
-       	text+= "Cliquez sur le bouton du bas pour lire les scores qui ont été sauvegardés\n\n";
-       	text+= "Le code est dans jeu.Fichier.java\n";
-      	text += "Lisez le code de la méthode actionPerformed.";
 
-     	lb1 = new JTextArea (text);
-    	lb1.setLineWrap(true);
-    	lb1.setEditable(false);
-    	lb1.setFont(new Font("Georgia",1,30));
+     	lb1 = new JPanel();
+    	lb1.setFont(new Font("Georgia", 1, 30));
+        lb1.setLayout(new GridLayout(11, 2));
+        presNom = new JLabel("Nom");
+        presNom.setFont(new Font("Georgia", 1, 30));
+        presNom.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        presScore = new JLabel("Score");
+        presScore.setFont(new Font("Georgia", 1, 30));
+        presScore.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        lb1.add(presNom);
+        lb1.add(presScore);
     	// on place le premier composant en bas
     	this.add(lb1,BorderLayout.CENTER);
 
      	Preferences pref = Preferences.getData();
         lb1.setBackground(pref.getCurrentBackgroundColor());
         lb1.setForeground(pref.getCurrentForegroundColor());
-
+        presNom.setForeground(pref.getCurrentForegroundColor());
+        presScore.setForeground(pref.getCurrentForegroundColor());
 
       	// bouton pour lancer la lecture dans le fichier
     	quitter = new JButton();
@@ -152,6 +153,8 @@ public class FichierScore extends FenetreAbstraite implements ActionListener{
         quitter.setForeground(currentPref.getCurrentBackgroundColor());
         lb1.setBackground(currentPref.getCurrentBackgroundColor());
         lb1.setForeground(currentPref.getCurrentForegroundColor());
+        presNom.setForeground(currentPref.getCurrentForegroundColor());
+        presScore.setForeground(currentPref.getCurrentForegroundColor());
 	}
 
     private class CloseListener implements ActionListener {
