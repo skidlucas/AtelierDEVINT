@@ -197,12 +197,9 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         String pathImage = Utils.getPath("images", theme);
         String pathSon = Utils.getPath("sound", theme);
 
-        System.out.println(pathImage);
-
         Queue<String> images = Utils.getContent(pathImage);
         Random random = new Random();
         for (int i = 0; i < nbCards; i++) {
-            System.out.println(nbCards);
             int rand;
             do {
                 rand = random.nextInt(nbCards);
@@ -372,7 +369,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
                 case "Moyen": cardsForGame = 18; break;
                 case "Difficile": cardsForGame = 24; break;
             }
-            JeuSolo frameSoloGame = new JeuSolo("Partie Solo", cardsForGame, nomJoueur);
+            JeuSolo frameSoloGame = new JeuSolo("Partie Solo", cardsForGame, nomJoueur, (String) themesList.getSelectedItem());
             dispose();
         }
     }

@@ -49,10 +49,13 @@ public class JeuSolo extends FenetreAbstraite {
     private JLabel textMsg;
     private JPanel boutonsFin;
 
+    private String theme;
+
     // appel au constructeur de la classe mère
-    public JeuSolo(String title, int nbCards, String nomJoueur) {
+    public JeuSolo(String title, int nbCards, String nomJoueur, String theme) {
         super(title);
         scoreManager = new ScoreManager();
+        this.theme = theme;
         this.strNomJoueur = nomJoueur;
         selectedCard = 0;
         minute = 0;
@@ -157,45 +160,21 @@ public class JeuSolo extends FenetreAbstraite {
     }
 
 
-    public void setPairCards() {
-        String pathImage = "../ressources/images/animal/";
-        String pathSon = "../ressources/sons/";
+    private void setPairCards () {
+        String pathImage = Utils.getPath("images", theme);
+        String pathSon = Utils.getPath("sound", theme);
 
-        Stack<String> images = new Stack<>();
-        images.add("loup");
-        images.add("loup");
-        images.add("vache");
-        images.add("vache");
-        images.add("dauphin");
-        images.add("dauphin");
-        images.add("chien");
-        images.add("chien");
-        images.add("ours");
-        images.add("ours");
-        images.add("elephant");
-        images.add("elephant");
-        images.add("cheval");
-        images.add("cheval");
-        images.add("chevre");
-        images.add("chevre");
-        images.add("singe");
-        images.add("singe");
-        images.add("hibou");
-        images.add("hibou");
-        images.add("chat");
-        images.add("chat");
-        images.add("lion");
-        images.add("lion");
-
+        Queue<String> images = Utils.getContent(pathImage);
         Random random = new Random();
         for (int i = 0; i < nbCards; i++) {
             int rand;
             do {
                 rand = random.nextInt(nbCards);
-            } while (!cards.get(rand).isReady());
+            } while (cards.get(rand).isReady(theme));
 
-            cards.get(rand).setImage(pathImage + images.peek() + ".jpg");
-            cards.get(rand).setSonCard(pathSon + images.pop() + ".wav");
+            cards.get(rand).setImage(pathImage+images.peek()+".jpg");
+            cards.get(rand).setSonCard(pathSon+images.poll()+".wav");
+            cards.get(rand).setTheme(theme);
         }
     }
 
