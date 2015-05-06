@@ -6,7 +6,6 @@ import jeu.model.Card;
 import jeu.model.Profil;
 
 import javax.swing.*;
-import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,21 +13,27 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.List;
+import java.util.Timer;
 
 /**
- * Created by user on 17/04/2015.
+ * Created by Nicolas HORY on 17/04/2015.
  */
 public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
-    private JComboBox themesList, firstProfil, secondProfil;
-    private JLabel theme, profil1, profil2;
+    private JComboBox themesList, profils1, profils2;
+    private JLabel theme, text;
     private JButton bouton;
     private JPanel jp1, jp2, jp3;
+    private JPanel panelProfil1;
+    private JPanel panelProfil2;
+    private JLabel textProfil1;
+    private JLabel textProfil2;
 
+    // appel au constructeur de la classe mère
     public PresJeuMulti(String title) {
         super(title);
         init();
         voix.stop();
-        voix.playText("Mode multijoueur. Choisissez vos profils et le thème avant de lancer la partie.");
+        voix.playText("Mode Multijoueur. Choisissez les profils des deux joueurs.");
     }
 
     // renvoie le fichier wave contenant le message d'accueil
@@ -59,33 +64,55 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         jp1.setBackground(backgroundColor);
 
         jp2 = new JPanel();
+        jp2.setLayout(new BorderLayout());
         jp2.setBackground(backgroundColor);
+
+        jp3 = new JPanel();
+        jp3.setLayout(new GridLayout(2,0));
+        jp3.setBackground(backgroundColor);
 
         List<Profil> allProfiles = Utils.chargeJsonProfil();
         String[] allNames = new String[allProfiles.size()];
         for (int i = 0; i < allProfiles.size(); i++) {
             allNames[i] = allProfiles.get(i).getName();
         }
-        firstProfil = new JComboBox(allNames);
-        firstProfil.setSelectedIndex(0);
-        firstProfil.setEditable(false);
-        firstProfil.setFont(new Font("Georgia", 1, 30));
-        firstProfil.setBackground(backgroundColor);
-        firstProfil.setForeground(foregroundColor);
-        firstProfil.addActionListener(this);
 
-        profil1 = new JLabel("Choisir le profil du joueur 1:");
-        profil1.setHorizontalAlignment(SwingConstants.CENTER);
-        profil1.setFont(new Font("Georgia", Font.BOLD, 30));
-        profil1.setForeground(foregroundColor);
+        panelProfil1 = new JPanel();
+        panelProfil1.setLayout(new GridLayout(0, 2));
+        textProfil1 = new JLabel("Choisir le joueur 1 :");
+        textProfil1.setFont(new Font("Georgia", Font.BOLD, 30));
+        textProfil1.setForeground(foregroundColor);
+        panelProfil1.setBackground(backgroundColor);
 
-        jp2.add(profil1);
-        jp2.add(firstProfil);
+        profils1 = new JComboBox(allNames);
+        profils1.setSelectedIndex(0);
+        profils1.setEditable(false);
+        profils1.setFont(new Font("Georgia", 1, 30));
+        profils1.setBackground(backgroundColor);
+        profils1.setForeground(foregroundColor);
+        profils1.addActionListener(this);
+        panelProfil1.add(textProfil1);
+        panelProfil1.add(profils1);
+        jp3.add(panelProfil1);
 
-        jp3 = new JPanel();
-        jp3.setLayout(new BorderLayout());
-        jp3.setBackground(backgroundColor);
 
+        profils2 = new JComboBox(allNames);
+        profils2.setSelectedIndex(0);
+        profils2.setEditable(false);
+        profils2.setFont(new Font("Georgia", 1, 30));
+        profils2.setBackground(backgroundColor);
+        profils2.setForeground(foregroundColor);
+        profils2.addActionListener(this);
+        panelProfil2 = new JPanel();
+        panelProfil2.setLayout(new GridLayout(0, 2));
+        textProfil2 = new JLabel("Choisir le joueur 2 :");
+        textProfil2.setFont(new Font("Georgia", Font.BOLD, 30));
+        textProfil2.setForeground(foregroundColor);
+        panelProfil2.setBackground(backgroundColor);
+
+        panelProfil2.add(textProfil2);
+        panelProfil2.add(profils2);
+        jp3.add(panelProfil2);
 
         String[] themes = {"Animaux", "Fruits", "Caractères chinois" };
         themesList = new JComboBox(themes);
@@ -96,8 +123,7 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         themesList.setForeground(foregroundColor);
         themesList.addActionListener(this);
 
-        theme = new JLabel("Choisir un thème parmi les suivants:");
-        theme.setHorizontalAlignment(SwingConstants.CENTER);
+        theme = new JLabel("Choisir thème");
         theme.setFont(new Font("Georgia", Font.BOLD, 30));
         theme.setForeground(foregroundColor);
 
@@ -105,14 +131,16 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         bouton.setBorder(new LineBorder(Color.BLACK, 5));
         bouton.setFont(new Font("Georgia", 1, 40));
         bouton.setForeground(backgroundColor);
-        bouton.addActionListener(this);
+        bouton.addActionListener(new startGameListener());
 
         jp1.add(theme);
         jp1.add(themesList);
         this.add(jp1);
-        this.add(jp2);
-        jp3.add(bouton, BorderLayout.SOUTH);
+
         this.add(jp3);
+        jp2.add(bouton, BorderLayout.SOUTH);
+        this.add(jp2);
+
     }
 
     // lire la question si clic sur le bouton
@@ -131,7 +159,6 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         // (après un clic, le focus est sur le bouton)
         this.requestFocus();
     }
-
 
     // évènements clavier
     public void keyPressed(KeyEvent e) {
@@ -164,6 +191,15 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         theme.setForeground(pref.getCurrentForegroundColor());
         bouton.setBackground(pref.getCurrentForegroundColor());
         bouton.setForeground(pref.getCurrentBackgroundColor());
+        textProfil1.setForeground(pref.getCurrentForegroundColor());
+        textProfil2.setForeground(pref.getCurrentForegroundColor());
+        panelProfil1.setBackground(pref.getCurrentBackgroundColor());
+        panelProfil2.setBackground(pref.getCurrentBackgroundColor());
+        profils1.setBackground(pref.getCurrentBackgroundColor());
+        profils2.setBackground(pref.getCurrentBackgroundColor());
+        profils1.setForeground(pref.getCurrentForegroundColor());
+        profils2.setForeground(pref.getCurrentForegroundColor());
+
     }
 
 
@@ -174,12 +210,22 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
         Font f = Preferences.getData().getCurrentFont();
         themesList.setFont(f);
         theme.setFont(f);
+        textProfil1.setFont(f);
+        textProfil2.setFont(f);
+        profils1.setFont(f);
+        profils2.setFont(f);
     }
 
     private class startGameListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            JeuMulti frameSoloGame = new JeuMulti("Jeu Multi");
-            dispose();
+            String nomJoueur1 =(String) profils1.getItemAt(profils1.getSelectedIndex());
+            String nomJoueur2 =(String) profils2.getItemAt(profils2.getSelectedIndex());
+            if (!nomJoueur1.equals(nomJoueur2)) {
+                JeuMulti frameMultiGame = new JeuMulti("Partie Multi", nomJoueur1, nomJoueur2);
+                dispose();
+            } else {
+                voix.playText("Veuillez choisir deux profils différents pour pouvoir jouer en multijoueur");
+            }
         }
     }
 }

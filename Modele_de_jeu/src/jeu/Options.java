@@ -295,8 +295,7 @@ public class Options extends FenetreAbstraite{
             if(e.getSource() == save){
                 Profil tmp = new Profil(fieldNom.getText(),
                         couleur.getSelectedItem().toString(),
-                        taille.getSelectedItem().toString(),
-                        currentProf.getScore());
+                        taille.getSelectedItem().toString());
 
                 allProfils.remove(indProf);
                 allProfils.add(tmp);

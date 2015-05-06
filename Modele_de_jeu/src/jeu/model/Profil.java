@@ -13,13 +13,10 @@ public class Profil implements Serializable{
 
     String taille;
 
-    int score;
-
-    public Profil(String name, String couleur, String taille, int score) {
+    public Profil(String name, String couleur, String taille) {
         this.name = name;
         this.couleur = couleur;
         this.taille = taille;
-        this.score = score;
     }
 
     public Profil() {
@@ -38,10 +35,6 @@ public class Profil implements Serializable{
 
     public String getTaille() {
         return taille;
-    }
-
-    public int getScore() {
-        return score;
     }
 
     public void setName(String name) {
