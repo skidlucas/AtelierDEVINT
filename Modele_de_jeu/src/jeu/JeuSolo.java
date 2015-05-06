@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class JeuSolo extends FenetreAbstraite implements ActionListener {
 
+    private String strNomJoueur;
     private int minute,seconde;
     private JPanel jp1, jp2;
     private JLabel nomJoueur;
@@ -46,8 +47,9 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
     private JPanel boutonsFin;
 
     // appel au constructeur de la classe mère
-    public JeuSolo(String title, int nbCards) {
+    public JeuSolo(String title, int nbCards, String nomJoueur) {
         super(title);
+        this.strNomJoueur = nomJoueur;
         selectedCard = 0;
         minute = 0;
         seconde = 0;
@@ -108,7 +110,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
         Color foregroundColor = pref.getCurrentForegroundColor();
         Color backgroundColor = pref.getCurrentBackgroundColor();
 
-        nomJoueur = new JLabel("Nom");
+        nomJoueur = new JLabel(strNomJoueur);
         nomJoueur.setFont(new Font("Georgia", Font.BOLD, 30));
         nomJoueur.setForeground(foregroundColor);
         nomJoueur.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

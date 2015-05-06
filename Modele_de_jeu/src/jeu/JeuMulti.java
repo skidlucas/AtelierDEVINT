@@ -288,7 +288,7 @@ public class JeuMulti extends FenetreAbstraite implements ActionListener {
         messageFin.setBackground(pref.getCurrentBackgroundColor());
         String msgEnd = "<html>Le joueur " + strNomJoueurGagnant + " a gagné avec " + nbPairesJoueurGagnant + " points<br></html>";
         voix.playText(msgEnd);
-        textMsg.setText("<html>Le joueur " + strNomJoueurGagnant + " a gagné avec " + nbPairesJoueurGagnant + " points<br></html>");
+        textMsg.setText(msgEnd);
         textMsg.setFont(new Font("Georgia", Font.BOLD, 30));
         textMsg.setBackground(pref.getCurrentBackgroundColor());
         textMsg.setForeground(pref.getCurrentForegroundColor());

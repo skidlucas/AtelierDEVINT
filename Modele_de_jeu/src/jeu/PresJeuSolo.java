@@ -6,6 +6,7 @@ import javax.swing.border.LineBorder;
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
 import jeu.model.Card;
+import jeu.model.Profil;
 
 import java.util.*;
 import java.awt.*;
@@ -24,8 +25,8 @@ import java.util.Timer;
 
 public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
 
-	private JComboBox themesList, difficultesList;
-    private JLabel theme, difficulte, text;
+	private JComboBox themesList, difficultesList, profils;
+    private JLabel theme, difficulte, text, textProfil;
     private JButton bouton;
     private JPanel jp1, jp2, jp3;
 
@@ -83,7 +84,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         Color backgroundColor = pref.getCurrentBackgroundColor();
     	setLayout(new GridLayout(3, 0));
         jp1 = new JPanel();
-        jp1.setLayout(new GridLayout(2, 2));
+        jp1.setLayout(new GridLayout(3, 2));
         jp1.setBackground(backgroundColor);
 
         jp2 = new JPanel();
@@ -121,6 +122,24 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         difficulte.setFont(new Font("Georgia", Font.BOLD, 30));
         difficulte.setForeground(foregroundColor);
 
+        textProfil = new JLabel("Choisir le joueur :");
+        textProfil.setFont(new Font("Georgia", Font.BOLD, 30));
+        textProfil.setForeground(foregroundColor);
+
+        List<Profil> allProfiles = Utils.chargeJson();
+        String[] allNames = new String[allProfiles.size()];
+        for (int i = 0; i < allProfiles.size(); i++) {
+            allNames[i] = allProfiles.get(i).getName();
+        }
+
+        profils = new JComboBox(allNames);
+        profils.setSelectedIndex(0);
+        profils.setEditable(false);
+        profils.setFont(new Font("Georgia", 1, 30));
+        profils.setBackground(backgroundColor);
+        profils.setForeground(foregroundColor);
+        profils.addActionListener(this);
+
         bouton.setBackground(foregroundColor);
         bouton.setBorder(new LineBorder(Color.BLACK, 5));
         bouton.setFont(new Font("Georgia", 1, 40));
@@ -136,6 +155,8 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         jp1.add(themesList);
         jp1.add(difficulte);
         jp1.add(difficultesList);
+        jp1.add(textProfil);
+        jp1.add(profils);
         this.add(jp1);
 
         for (Card card : cards) {
@@ -343,13 +364,14 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
     private class startGameListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String difficulte = (String)difficultesList.getSelectedItem();
+            String nomJoueur =(String) profils.getItemAt(profils.getSelectedIndex());
             int cardsForGame = 0;
             switch (difficulte) {
                 case "Facile": cardsForGame = 12; break;
                 case "Moyen": cardsForGame = 18; break;
                 case "Difficile": cardsForGame = 24; break;
             }
-            JeuSolo frameSoloGame = new JeuSolo("Partie Solo", cardsForGame);
+            JeuSolo frameSoloGame = new JeuSolo("Partie Solo", cardsForGame, nomJoueur);
             dispose();
         }
     }
