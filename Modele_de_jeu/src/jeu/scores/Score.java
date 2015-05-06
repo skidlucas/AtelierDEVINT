@@ -24,6 +24,10 @@ public class Score implements Comparable {
         return nbPoint.compareTo(s.getNbPoint());
     }
 
+    public String getName() {
+        return name;
+    }
+
     public int getNbPoint() {
         return nbPoint;
     }

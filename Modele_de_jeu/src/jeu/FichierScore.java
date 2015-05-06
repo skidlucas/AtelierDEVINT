@@ -23,14 +23,11 @@ import javax.swing.border.LineBorder;
 
 import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
+import jeu.scores.Score;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.List;
 
 /** Cette classe est un exemple d'utilisation d'un fichier
  * 
@@ -42,7 +39,7 @@ public class FichierScore extends FenetreAbstraite implements ActionListener{
 
 	private JButton quitter; // Le bouton pour quitter
     private JPanel lb1;
-    private JLabel presNom, presScore; // Titre des colonnes
+    private JLabel presNom, presScore, presTime; // Titre des colonnes
 
 	// appel au constructeur de la classe mère
     public FichierScore(String title) {
@@ -58,16 +55,34 @@ public class FichierScore extends FenetreAbstraite implements ActionListener{
 
      	lb1 = new JPanel();
     	lb1.setFont(new Font("Georgia", 1, 30));
-        lb1.setLayout(new GridLayout(11, 2));
+        lb1.setLayout(new GridLayout(11, 3));
         presNom = new JLabel("Nom");
         presNom.setFont(new Font("Georgia", 1, 30));
         presNom.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         presScore = new JLabel("Score");
         presScore.setFont(new Font("Georgia", 1, 30));
         presScore.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        presTime = new JLabel("Temps");
+        presTime.setFont(new Font("Georgia", 1, 30));
+        presTime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
+
+        List<Score> allScores = Utils.chargeJsonScores();
         lb1.add(presNom);
         lb1.add(presScore);
+        lb1.add(presTime);
+
+        int maxLength = allScores.size();
+        if (maxLength > 10) maxLength = 10;
+        for (int i = 0; i < maxLength; i++) {
+            JLabel currentLabelName = new JLabel(allScores.get(i).getName());
+            JLabel currentLabelScore = new JLabel(Integer.toString(allScores.get(i).getNbPoint()));
+            JLabel currentLabelTime = new JLabel(allScores.get(i).getTime());
+            lb1.add(currentLabelName);
+            lb1.add(currentLabelScore);
+            lb1.add(currentLabelTime);
+        }
+
     	// on place le premier composant en bas
     	this.add(lb1,BorderLayout.CENTER);
 
@@ -76,6 +91,7 @@ public class FichierScore extends FenetreAbstraite implements ActionListener{
         lb1.setForeground(pref.getCurrentForegroundColor());
         presNom.setForeground(pref.getCurrentForegroundColor());
         presScore.setForeground(pref.getCurrentForegroundColor());
+        presTime.setForeground(pref.getCurrentForegroundColor());
 
       	// bouton pour lancer la lecture dans le fichier
     	quitter = new JButton();
@@ -155,6 +171,7 @@ public class FichierScore extends FenetreAbstraite implements ActionListener{
         lb1.setForeground(currentPref.getCurrentForegroundColor());
         presNom.setForeground(currentPref.getCurrentForegroundColor());
         presScore.setForeground(currentPref.getCurrentForegroundColor());
+        presTime.setForeground(currentPref.getCurrentForegroundColor());
 	}
 
     private class CloseListener implements ActionListener {
