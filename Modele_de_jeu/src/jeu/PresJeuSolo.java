@@ -126,7 +126,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         textProfil.setFont(new Font("Georgia", Font.BOLD, 30));
         textProfil.setForeground(foregroundColor);
 
-        List<Profil> allProfiles = Utils.chargeJson();
+        List<Profil> allProfiles = Utils.chargeJsonProfil();
         String[] allNames = new String[allProfiles.size()];
         for (int i = 0; i < allProfiles.size(); i++) {
             allNames[i] = allProfiles.get(i).getName();

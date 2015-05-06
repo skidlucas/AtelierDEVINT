@@ -20,6 +20,9 @@ public class Profil implements Serializable{
     }
 
     public Profil() {
+        this.name = "Unknown";
+        this.couleur = "Orange";
+        this.taille = "Grande";
     }
 
     public String getName() {

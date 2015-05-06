@@ -64,7 +64,7 @@ public class Options extends FenetreAbstraite{
     }
 
     private void initJson(){
-        allProfils = Utils.chargeJson();
+        allProfils = Utils.chargeJsonProfil();
         indProf = 0;
         currentProf = allProfils.get(indProf);
     }
@@ -301,7 +301,7 @@ public class Options extends FenetreAbstraite{
                 allProfils.add(tmp);
                 currentProf = tmp;
                 indProf = allProfils.size() - 1;
-                Utils.writeJson(allProfils);
+                Utils.writeJson(allProfils, Utils.profilFilename);
             } else {
                 dispose();
             }

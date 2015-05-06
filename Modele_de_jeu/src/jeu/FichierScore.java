@@ -22,14 +22,15 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import devintAPI.FenetreAbstraite;
+import devintAPI.Preferences;
+import jeu.scores.Score;
+import jeu.scores.ScoreManager;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /** Cette classe est un exemple d'utilisation d'un fichier
  * 
@@ -37,18 +38,17 @@ import java.io.IOException;
  * @author Jean-Paul, mars 2011
  */
 
-public class FichierScore extends FenetreAbstraite implements ActionListener{
+public class FichierScore extends FenetreAbstraite{
 
-	// le bouton pour créer un fichier
-	// doit être accessible dans la méthode actionPerformed 
-	private JButton ecrire;
-
-	// le bouton pour lire un fichier
-	private JButton lire;
+	private JButton quitter; // Le bouton pour quitter
+    private JPanel lb1;
+    private JLabel presNom, presScore, presTime; // Titre des colonnes
+    private List<JLabel> labelsScores;
 
 	// appel au constructeur de la classe mère
     public FichierScore(String title) {
     	super(title);
+        init();
      }
 
     // définition de la méthode abstraite "init()"
@@ -56,109 +56,126 @@ public class FichierScore extends FenetreAbstraite implements ActionListener{
     protected void init() {
     	// BorderLayout, voir http://java.sun.com/docs/books/tutorial/uiswing/layout/border.html
     	setLayout(new BorderLayout());
- 
-    	String text = "Jean-Paul a gagné, voici les scores :\n";
-    	text += "Jean-Paul 20\n";
-       	text +="Hélène : 15\n";
-		text +="Catherine : 16\n\n";
-    	text+= "Cliquez sur le bouton du haut et vérifiez si le fichier a été créé\n";
-       	text+= "Cliquez sur le bouton du bas pour lire les scores qui ont été sauvegardés\n\n";
-       	text+= "Le code est dans jeu.Fichier.java\n";
-      	text += "Lisez le code de la méthode actionPerformed.";
 
-     	JTextArea lb1 = new JTextArea (text); 
-    	lb1.setLineWrap(true);
-    	lb1.setEditable(false);
-    	lb1.setFont(new Font("Georgia",1,30));
+        labelsScores = new ArrayList<>();
+     	lb1 = new JPanel();
+    	lb1.setFont(new Font("Georgia", 1, 30));
+        lb1.setLayout(new GridLayout(11, 3));
+        presNom = new JLabel("Nom");
+        presNom.setFont(new Font("Georgia", 1, 30));
+        presNom.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        presScore = new JLabel("Score");
+        presScore.setFont(new Font("Georgia", 1, 30));
+        presScore.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        presTime = new JLabel("Temps");
+        presTime.setFont(new Font("Georgia", 1, 30));
+        presTime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        List<Score> allScores = Utils.chargeJsonScores();
+        lb1.add(presNom);
+        lb1.add(presScore);
+        lb1.add(presTime);
+
     	// on place le premier composant en bas
     	this.add(lb1,BorderLayout.CENTER);
-    	
-    	// bouton pour lancer l'écriture dans le fichier
-    	ecrire = new JButton();
-    	ecrire.setText("Cliquer pour écrire le fichier des scores");
-    	ecrire.setBackground(new Color(255,105,180));
-    	ecrire.setBorder(new LineBorder(Color.BLACK,5));
-     	ecrire.setFont(new Font("Georgia",1,40));
-     	// c'est l'objet Jeu lui-même qui réagit au clic souris
-       	ecrire.addActionListener(this);
-    	// on met le bouton en haut
-     	this.add(ecrire,BorderLayout.NORTH);
-     	
+
+     	Preferences pref = Preferences.getData();
+        lb1.setBackground(pref.getCurrentBackgroundColor());
+        lb1.setForeground(pref.getCurrentForegroundColor());
+        presNom.setForeground(pref.getCurrentForegroundColor());
+        presScore.setForeground(pref.getCurrentForegroundColor());
+        presTime.setForeground(pref.getCurrentForegroundColor());
+        presNom.setBorder(new LineBorder(pref.getCurrentForegroundColor(), 5));
+        presTime.setBorder(new LineBorder(pref.getCurrentForegroundColor(), 5));
+        presScore.setBorder(new LineBorder(pref.getCurrentForegroundColor(), 5));
+
+
+        int maxLength = allScores.size();
+        if (maxLength > ScoreManager.NB_MAX_SCORES) maxLength = ScoreManager.NB_MAX_SCORES;
+        for (int i = 0; i < maxLength; i++) {
+            JLabel currentLabelName = new JLabel(allScores.get(i).getName());
+            JLabel currentLabelScore = new JLabel(Integer.toString(allScores.get(i).getNbPoint()));
+            JLabel currentLabelTime = new JLabel(allScores.get(i).getTime());
+            currentLabelName.setFont(new Font("Georgia", 1, 30));
+            currentLabelTime.setFont(new Font("Georgia", 1, 30));
+            currentLabelScore.setFont(new Font("Georgia", 1, 30));
+
+            currentLabelName.setForeground(pref.getCurrentForegroundColor());
+            currentLabelTime.setForeground(pref.getCurrentForegroundColor());
+            currentLabelScore.setForeground(pref.getCurrentForegroundColor());
+
+            currentLabelTime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            currentLabelScore.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            currentLabelName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+            labelsScores.addAll(Arrays.asList(currentLabelName, currentLabelScore, currentLabelTime));
+            lb1.add(currentLabelName);
+            lb1.add(currentLabelScore);
+            lb1.add(currentLabelTime);
+        }
+
+        if (maxLength < ScoreManager.NB_MAX_SCORES) {
+            for (int i = maxLength; i < ScoreManager.NB_MAX_SCORES; i++) {
+                JLabel currentLabelName = new JLabel();
+                JLabel currentLabelScore = new JLabel();
+                JLabel currentLabelTime = new JLabel();
+                currentLabelTime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                currentLabelScore.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                currentLabelName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+                labelsScores.addAll(Arrays.asList(currentLabelName, currentLabelScore, currentLabelTime));
+                lb1.add(currentLabelName);
+                lb1.add(currentLabelScore);
+                lb1.add(currentLabelTime);
+            }
+        }
+
       	// bouton pour lancer la lecture dans le fichier
-    	lire = new JButton();
-    	lire.setText("Cliquer pour lire le fichier");
-    	lire.setBackground(new Color(55,34,255));
-    	lire.setForeground(new Color(250,250,210));
-    	lire.setBorder(new LineBorder(Color.BLACK,10));
-    	lire.setFont(new Font("Georgia",1,40));
+    	quitter = new JButton();
+    	quitter.setText("Quitter la page des scores");
+    	quitter.setBackground(pref.getCurrentForegroundColor());
+        quitter.setForeground(pref.getCurrentBackgroundColor());
+    	quitter.setFont(new Font("Georgia",1,40));
      	// c'est l'objet Jeu lui-même qui réagit au clic souris
-    	lire.addActionListener(this);
+    	quitter.addActionListener(new CloseListener());
     	// on met le bouton en haut
-     	this.add(lire,BorderLayout.SOUTH);
+     	this.add(quitter,BorderLayout.SOUTH);
      	
    }
 
-    // lire la question si clic sur le bouton 
-    public void actionPerformed(ActionEvent ae){
-       	// toujours stopper la voix avant de parler
-    	voix.stop();
-    	// on récupère la source de l'évènement
-     	Object source = ae.getSource();
-     	// si c'est le bouton "ecrire" 
-    	if (source.equals(ecrire)) {
-    		String text = "Ecriture des scores dans le fichier ressources slache sons slache scores point té ix té.";
-    		voix.playText(text);
-    		String chemin = ".." + File.separator + "ressources" + File.separator + "score.txt";
-    		// écriture dans le fichier score
-    		try {
-    			FileWriter w = new FileWriter(chemin);
-    			w.write("Jean-Paul : 20.");
-    			w.write("");
-    			w.write("Hélène : 15.");
-    			w.write("");
-    			w.write("Catherine : 16.");
-    			w.close();
-    		}
-    		catch (IOException e) {
-    			System.out.println("pb ecriture fichier");
-    			e.printStackTrace();
-    		}
-    	}
-    	// si c'est le bouton lire
-      	if (source.equals(lire)) {
-    		String chemin = ".." + File.separator + "ressources" + File.separator + "score.txt";
-    		// on lit le fichier de score et on fait dire chaque ligne par la synthèse vocale
-    		try {
-    			BufferedReader l = new BufferedReader(new FileReader(chemin));
-    			String line = l.readLine();
-    	   		while (line != null) {
-    	   			voix.playText(line);
-    	   			line = l.readLine();
-    	   			Thread.sleep(1000);
-    	   		}
-    			l.close();
-    		}
-    		catch (IOException e) {
-    			System.out.println("pb lecture fichier");
-    			e.printStackTrace();
-    		} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	}	
-
-    	
-    	// on redonne le focus au JFrame principal 
-    	// (après un clic, le focus est sur le bouton)
-    	this.requestFocus();
-    }
-
 	@Override
 	public void changeColor() {
+        Preferences currentPref = Preferences.getData();
+        quitter.setBackground(currentPref.getCurrentForegroundColor());
+        quitter.setForeground(currentPref.getCurrentBackgroundColor());
+        lb1.setBackground(currentPref.getCurrentBackgroundColor());
+        lb1.setForeground(currentPref.getCurrentForegroundColor());
+        presNom.setForeground(currentPref.getCurrentForegroundColor());
+        presScore.setForeground(currentPref.getCurrentForegroundColor());
+        presTime.setForeground(currentPref.getCurrentForegroundColor());
+        for (JLabel label : labelsScores) {
+            label.setForeground(currentPref.getCurrentForegroundColor());
+        }
+        presNom.setBorder(new LineBorder(currentPref.getCurrentForegroundColor(), 5));
+        presTime.setBorder(new LineBorder(currentPref.getCurrentForegroundColor(), 5));
+        presScore.setBorder(new LineBorder(currentPref.getCurrentForegroundColor(), 5));
 	}
+
+    private class CloseListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dispose();
+        }
+    }
 	
 	@Override
 	public void changeSize() {
+        Font f = Preferences.getData().getCurrentFont();
+        lb1.setFont(f);
+        quitter.setFont(f);
+        presNom.setFont(f);
+        presScore.setFont(f);
+        presTime.setFont(f);
 	}
 
 	// renvoie le fichier wave contenant le message d'accueil

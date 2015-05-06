@@ -4,6 +4,8 @@ import devintAPI.FenetreAbstraite;
 import devintAPI.Preferences;
 import jeu.model.Card;
 import jeu.model.Profil;
+import jeu.scores.Score;
+import jeu.scores.ScoreManager;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -13,8 +15,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 import java.util.List;
 
@@ -23,6 +23,7 @@ import java.util.List;
  * @version 26/03/2015.
  */
 public class JeuSolo extends FenetreAbstraite implements ActionListener {
+    private ScoreManager scoreManager;
 
     private Profil currentProfil = new Profil();
     private String strNomJoueur;
@@ -51,6 +52,7 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
     // appel au constructeur de la classe mère
     public JeuSolo(String title, int nbCards, String nomJoueur) {
         super(title);
+        scoreManager = new ScoreManager();
         this.strNomJoueur = nomJoueur;
         selectedCard = 0;
         minute = 0;
@@ -370,6 +372,10 @@ public class JeuSolo extends FenetreAbstraite implements ActionListener {
                     if(returnedCards.size() == nbCards) {
                         voix.forceStop();
                         chrono.stop();
+
+                        // Add score in json file
+                        scoreManager.add(new Score(nomJoueur.getText(), nbPoints, timer.getText()));
+
                         changeViewEndGame();
                     }
                 } else {
