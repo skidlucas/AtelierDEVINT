@@ -102,7 +102,9 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
 		themesList.setBackground(backgroundColor);
 		themesList.setForeground(foregroundColor);
         themesList.addActionListener(e -> {
+            resetGame();
             setPairCards();
+            cards.get(selectedCard).doClick();
         });
 
         String[] difficultes = {"Facile", "Moyen", "Difficile"};
@@ -303,6 +305,16 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         difficulte.setFont(f);
         text.setFont(f);
 	}
+
+    private void resetGame() {
+        for (int i = 0; i < nbCards; ++i) {
+            if (!cards.get(i).isEnabled()) {
+                cards.get(i).setEnabled(true);
+                cards.get(i).turn();
+            }
+        }
+        nbReturnedCards = 0;
+    }
 
     public class CardsListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
