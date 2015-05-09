@@ -294,7 +294,7 @@ public class Options extends FenetreAbstraite{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(e.getSource() == save){
+            if(e.getSource() == save && !fieldNom.getText().isEmpty()){
                 Profil tmp = new Profil(fieldNom.getText(),
                         couleur.getSelectedItem().toString(),
                         taille.getSelectedItem().toString());
@@ -304,6 +304,7 @@ public class Options extends FenetreAbstraite{
                 currentProf = tmp;
                 indProf = allProfils.size() - 1;
                 Utils.writeJson(allProfils, Utils.profilFilename);
+                refreshChamp();
             } else {
                 dispose();
             }
@@ -314,6 +315,16 @@ public class Options extends FenetreAbstraite{
     private class addListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            if(e.getSource() == addButton && !fieldNom.getText().isEmpty()){
+                Profil tmp = new Profil(fieldNom.getText(),
+                        couleur.getSelectedItem().toString(),
+                        taille.getSelectedItem().toString());
+                allProfils.add(tmp);
+                currentProf = tmp;
+                indProf = allProfils.size() - 1;
+                Utils.writeJson(allProfils, Utils.profilFilename);
+                refreshChamp();
+            }
             requestFocus();
         }
     }
