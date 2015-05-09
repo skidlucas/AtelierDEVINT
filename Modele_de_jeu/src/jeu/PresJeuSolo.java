@@ -208,7 +208,7 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
             } while (cards.get(rand).isReady(theme));
 
             cards.get(rand).setImage(pathImage+images.peek()+".jpg");
-            cards.get(rand).setSonCard(pathSon+images.poll()+".wav");
+            cards.get(rand).setSonCard(pathSon + images.poll() + ".wav");
             cards.get(rand).setTheme(theme);
         }
     }
@@ -307,13 +307,13 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
 	}
 
     private void resetGame() {
+        nbReturnedCards = 0;
         for (int i = 0; i < nbCards; ++i) {
             if (!cards.get(i).isEnabled()) {
                 cards.get(i).setEnabled(true);
                 cards.get(i).turn();
             }
         }
-        nbReturnedCards = 0;
     }
 
     public class CardsListener implements ActionListener {

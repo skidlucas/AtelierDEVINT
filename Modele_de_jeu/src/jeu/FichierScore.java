@@ -56,7 +56,6 @@ public class FichierScore extends FenetreAbstraite{
     protected void init() {
     	// BorderLayout, voir http://java.sun.com/docs/books/tutorial/uiswing/layout/border.html
     	setLayout(new BorderLayout());
-
         labelsScores = new ArrayList<>();
      	lb1 = new JPanel();
     	lb1.setFont(new Font("Georgia", 1, 30));
@@ -76,7 +75,8 @@ public class FichierScore extends FenetreAbstraite{
         lb1.add(presScore);
         lb1.add(presTime);
 
-    	// on place le premier composant en bas
+        voix.playText("Bienvenue dans la fenêtre des meilleurs scores. Le podium est constitué de" + allScores.get(0).getName() + allScores.get(1).getName() + "et " + allScores.get(2).getName());
+        // on place le premier composant en bas
     	this.add(lb1,BorderLayout.CENTER);
 
      	Preferences pref = Preferences.getData();
@@ -93,7 +93,7 @@ public class FichierScore extends FenetreAbstraite{
         int maxLength = allScores.size();
         if (maxLength > ScoreManager.NB_MAX_SCORES) maxLength = ScoreManager.NB_MAX_SCORES;
         for (int i = 0; i < maxLength; i++) {
-            JLabel currentLabelName = new JLabel(allScores.get(i).getName());
+            JLabel currentLabelName = new JLabel(i+1 + ". " + allScores.get(i).getName());
             JLabel currentLabelScore = new JLabel(Integer.toString(allScores.get(i).getNbPoint()));
             JLabel currentLabelTime = new JLabel(allScores.get(i).getTime());
             currentLabelName.setFont(new Font("Georgia", 1, 30));
