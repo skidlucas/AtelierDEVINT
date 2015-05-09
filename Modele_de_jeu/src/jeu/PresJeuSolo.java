@@ -307,13 +307,14 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
 	}
 
     private void resetGame() {
-        nbReturnedCards = 0;
         for (int i = 0; i < nbCards; ++i) {
             if (!cards.get(i).isEnabled()) {
                 cards.get(i).setEnabled(true);
                 cards.get(i).turn();
             }
         }
+        nbReturnedCards = 0;
+        selectedCards = new ArrayList<>();
     }
 
     public class CardsListener implements ActionListener {
