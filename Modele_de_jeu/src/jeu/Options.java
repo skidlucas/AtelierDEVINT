@@ -44,10 +44,7 @@ public class Options extends FenetreAbstraite{
     Color foregroundColor;
     Color backgroundColor;
 
-    private JButton save;
-    private JButton quit;
-    private JButton gauche;
-    private JButton droite;
+    private JButton save,quit, gauche, droite, addButton;
 
     java.util.List<Profil> allProfils;
     Profil currentProf;
@@ -160,10 +157,14 @@ public class Options extends FenetreAbstraite{
         save = new JButton("Sauver");
         save.setFont(pref.getCurrentFont());
         save.addActionListener(new submitListener());
+        addButton = new JButton("Ajouter");
+        addButton.setFont(pref.getCurrentFont());
+        addButton.addActionListener(new addListener());
         quit = new JButton("Quitter");
         quit.addActionListener(new submitListener());
         quit.setFont(pref.getCurrentFont());
         buttons.setLayout(new FlowLayout());
+        buttons.add(addButton);
         buttons.add(save);
         buttons.add(quit);
 
@@ -210,6 +211,7 @@ public class Options extends FenetreAbstraite{
         lCouleur.setFont(f);
         lTaille.setFont(f);
         lNom.setFont(f);
+        addButton.setFont(f);
         save.setFont(f);
         quit.setFont(f);
         couleur.setFont(f);
@@ -305,6 +307,13 @@ public class Options extends FenetreAbstraite{
             } else {
                 dispose();
             }
+            requestFocus();
+        }
+    }
+
+    private class addListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             requestFocus();
         }
     }
