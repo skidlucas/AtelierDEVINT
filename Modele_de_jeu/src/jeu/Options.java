@@ -11,11 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.awt.event.KeyEvent;
 
 /**
  * Created by user on 18/03/2015.
@@ -177,6 +173,7 @@ public class Options extends FenetreAbstraite{
         placement.setConstraints(buttons, regles);
         add(buttons);
     }
+
     // renvoie le fichier wave contenant le message d'accueil
     protected  String wavAccueil() {
         return "../../ressources/sons/accueilFichier.wav";
@@ -224,12 +221,42 @@ public class Options extends FenetreAbstraite{
         fieldNom.setFont(f);
     }
 
+    public void keyPressed(KeyEvent e) {
+        super.keyPressed(e);
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            changeToLeftProfil();
+        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            changeToRightProfil();
+        }
+    }
+
     private void refreshChamp(){
         fieldNom.setText(currentProf.getName());
         nom.setText(currentProf.getName());
         couleur.setSelectedItem(currentProf.getCouleur());
         taille.setSelectedItem(currentProf.getTaille());
     }
+
+    private void changeToLeftProfil() {
+        indProf--;
+        if(indProf < 0){
+            indProf = allProfils.size() - 1;
+        }
+        currentProf = allProfils.get(indProf);
+        refreshChamp();
+        requestFocus();
+    }
+
+    private void changeToRightProfil() {
+        indProf++;
+        if(indProf >= allProfils.size()){
+            indProf = 0;
+        }
+        currentProf = allProfils.get(indProf);
+        refreshChamp();
+        requestFocus();
+    }
+
 
     /**
      * check if the profil already exists
@@ -248,20 +275,11 @@ public class Options extends FenetreAbstraite{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(e.getSource() == droite){
-                indProf++;
-                if(indProf >= allProfils.size()){
-                    indProf = 0;
-                }
-            } else if(e.getSource() == gauche) {
-                indProf--;
-                if(indProf < 0){
-                    indProf = allProfils.size() - 1;
-                }
+            if (e.getSource() == gauche) {
+                changeToLeftProfil();
+            } else if (e.getSource() == droite) {
+                changeToRightProfil();
             }
-            currentProf = allProfils.get(indProf);
-            refreshChamp();
-            requestFocus();
         }
     }
 
