@@ -226,6 +226,19 @@ public class Options extends FenetreAbstraite{
         taille.setSelectedItem(currentProf.getTaille());
     }
 
+    /**
+     * check if the profil already exists
+     * @param name
+     * @return
+     */
+    private boolean nameIsInProfils(String name){
+        for(Profil prof : allProfils){
+            if(prof.getName().equalsIgnoreCase(name))
+                return true;
+        }
+        return false;
+    }
+
     public class changeListener implements ActionListener{
 
         @Override
@@ -319,13 +332,28 @@ public class Options extends FenetreAbstraite{
                 Profil tmp = new Profil(fieldNom.getText(),
                         couleur.getSelectedItem().toString(),
                         taille.getSelectedItem().toString());
-                allProfils.add(tmp);
-                currentProf = tmp;
-                indProf = allProfils.size() - 1;
-                Utils.writeJson(allProfils, Utils.profilFilename);
+                if(nameIsInProfils(tmp.getName())){
+                    voix.playText("Un profil existe déjà avec ce nom, veuillez saisir un autre nom");
+                } else {
+                    allProfils.add(tmp);
+                    currentProf = tmp;
+                    indProf = allProfils.size() - 1;
+                    Utils.writeJson(allProfils, Utils.profilFilename);
+                }
                 refreshChamp();
             }
             requestFocus();
         }
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == deleteButton && allProfils.size() > 1){
+            allProfils.remove(indProf);
+            currentProf = allProfils.get(0);
+            indProf = 0;
+            Utils.writeJson(allProfils, Utils.profilFilename);
+            refreshChamp();
+        }
+        requestFocus();
     }
 }
