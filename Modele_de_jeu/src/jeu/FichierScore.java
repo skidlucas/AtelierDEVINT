@@ -75,7 +75,11 @@ public class FichierScore extends FenetreAbstraite{
         lb1.add(presScore);
         lb1.add(presTime);
 
-        voix.playText("Bienvenue dans la fenêtre des meilleurs scores. Le podium est constitué de" + allScores.get(0).getName() + allScores.get(1).getName() + "et " + allScores.get(2).getName());
+        if (allScores.size() < 3) {
+            voix.playText("Bienvenue dans la fenêtre des meilleurs scores. Le podium n'est pas encore complet, continuez à jouer !");
+        } else {
+            voix.playText("Bienvenue dans la fenêtre des meilleurs scores. Le podium est constitué de" + allScores.get(0).getName() + allScores.get(1).getName() + "et " + allScores.get(2).getName());
+        }
         // on place le premier composant en bas
     	this.add(lb1,BorderLayout.CENTER);
 
