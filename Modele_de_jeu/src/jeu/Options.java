@@ -69,7 +69,7 @@ public class Options extends FenetreAbstraite{
         pref = Preferences.getData();
         Color foregroundColor = pref.getCurrentForegroundColor();
         Color backgroundColor = pref.getCurrentBackgroundColor();
-
+        voix.playText("Choisissez ici le profil actif. Vous pouvez naviguer entre les profils à l'aide des flèches du clavier ou bien en cliquant sur les flèches en haut de l'écran. Si votre profil n'existe pas, vous pouvez en créer un nouveau avec un nom qui n'est pas encore utilisé, ou bien en modifier un déjà existant. Vous pouvez également supprimer les profils inutilisés.");
         createLayout();
         createTete();
         createForm();
