@@ -287,6 +287,10 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         bouton.setBackground(pref.getCurrentForegroundColor());
         bouton.setForeground(pref.getCurrentBackgroundColor());
         text.setForeground(pref.getCurrentForegroundColor());
+        textProfil.setForeground(pref.getCurrentForegroundColor());
+        textProfil.setBackground(pref.getCurrentBackgroundColor());
+        profils.setForeground(pref.getCurrentForegroundColor());
+        profils.setBackground(pref.getCurrentBackgroundColor());
 
         for (Card card : cards) {
             card.setBackground(pref.getCurrentBackgroundColor());
@@ -304,6 +308,8 @@ public class PresJeuSolo extends FenetreAbstraite implements ActionListener{
         theme.setFont(f);
         difficulte.setFont(f);
         text.setFont(f);
+        textProfil.setFont(f);
+        profils.setFont(f);
 	}
 
     private void resetGame() {
