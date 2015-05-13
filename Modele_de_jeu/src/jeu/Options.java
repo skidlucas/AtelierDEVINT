@@ -44,7 +44,7 @@ public class Options extends FenetreAbstraite{
     Color foregroundColor;
     Color backgroundColor;
 
-    private JButton save,quit, gauche, droite, addButton;
+    private JButton save,quit, gauche, droite, addButton, delete;
 
     java.util.List<Profil> allProfils;
     Profil currentProf;
@@ -100,7 +100,7 @@ public class Options extends FenetreAbstraite{
     private void createTete(){
         profil = new JPanel();
 
-        ActionListener changeList = new changeListener();
+        ActionListener changeList = new ChangeListener();
         gauche = new JButton(new ImageIcon("../ressources/images/flechegauche.png"));
         gauche.addActionListener(changeList);
         droite = new JButton(new ImageIcon("../ressources/images/flechedroite.png"));
@@ -123,7 +123,7 @@ public class Options extends FenetreAbstraite{
     private void createForm(){
         options = new JPanel();
 
-        ActionListener comboListener = new comboListener();
+        ActionListener comboListener = new ComboListener();
 
         fieldNom = new JTextField();
         fieldNom.setText(currentProf.getName());
@@ -156,16 +156,20 @@ public class Options extends FenetreAbstraite{
         buttons = new JPanel();
         save = new JButton("Sauver");
         save.setFont(pref.getCurrentFont());
-        save.addActionListener(new submitListener());
+        save.addActionListener(new SubmitListener());
         addButton = new JButton("Ajouter");
         addButton.setFont(pref.getCurrentFont());
-        addButton.addActionListener(new addListener());
+        addButton.addActionListener(new AddListener());
         quit = new JButton("Quitter");
-        quit.addActionListener(new submitListener());
+        quit.addActionListener(new SubmitListener());
         quit.setFont(pref.getCurrentFont());
+        delete = new JButton("Supprimer");
+        delete.setFont(pref.getCurrentFont());
+        delete.addActionListener(new DeleteListener());
         buttons.setLayout(new FlowLayout());
         buttons.add(addButton);
         buttons.add(save);
+        buttons.add(delete);
         buttons.add(quit);
 
         regles.gridx = 1;
@@ -212,6 +216,7 @@ public class Options extends FenetreAbstraite{
         lTaille.setFont(f);
         lNom.setFont(f);
         addButton.setFont(f);
+        delete.setFont(f);
         save.setFont(f);
         quit.setFont(f);
         couleur.setFont(f);
@@ -226,7 +231,20 @@ public class Options extends FenetreAbstraite{
         taille.setSelectedItem(currentProf.getTaille());
     }
 
-    public class changeListener implements ActionListener{
+    /**
+     * check if the profil already exists
+     * @param name
+     * @return
+     */
+    private boolean nameIsInProfils(String name){
+        for(Profil prof : allProfils){
+            if(prof.getName().equalsIgnoreCase(name))
+                return true;
+        }
+        return false;
+    }
+
+    public class ChangeListener implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -247,7 +265,7 @@ public class Options extends FenetreAbstraite{
         }
     }
 
-    public class comboListener implements ActionListener{
+    public class ComboListener implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -290,7 +308,7 @@ public class Options extends FenetreAbstraite{
         }
     }
 
-    public class submitListener implements ActionListener{
+    public class SubmitListener implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -298,12 +316,15 @@ public class Options extends FenetreAbstraite{
                 Profil tmp = new Profil(fieldNom.getText(),
                         couleur.getSelectedItem().toString(),
                         taille.getSelectedItem().toString());
-
-                allProfils.remove(indProf);
-                allProfils.add(tmp);
-                currentProf = tmp;
-                indProf = allProfils.size() - 1;
-                Utils.writeJson(allProfils, Utils.profilFilename);
+                if(nameIsInProfils(tmp.getName())){
+                    voix.playText("Un profil existe déjà avec ce nom, veuillez saisir un autre nom");
+                } else {
+                    allProfils.remove(indProf);
+                    allProfils.add(tmp);
+                    currentProf = tmp;
+                    indProf = allProfils.size() - 1;
+                    Utils.writeJson(allProfils, Utils.profilFilename);
+                }
                 refreshChamp();
             } else {
                 dispose();
@@ -312,16 +333,34 @@ public class Options extends FenetreAbstraite{
         }
     }
 
-    private class addListener implements ActionListener {
+    private class AddListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() == addButton && !fieldNom.getText().isEmpty()){
                 Profil tmp = new Profil(fieldNom.getText(),
                         couleur.getSelectedItem().toString(),
                         taille.getSelectedItem().toString());
-                allProfils.add(tmp);
-                currentProf = tmp;
-                indProf = allProfils.size() - 1;
+                if(nameIsInProfils(tmp.getName())){
+                    voix.playText("Un profil existe déjà avec ce nom, veuillez saisir un autre nom");
+                } else {
+                    allProfils.add(tmp);
+                    currentProf = tmp;
+                    indProf = allProfils.size() - 1;
+                    Utils.writeJson(allProfils, Utils.profilFilename);
+                }
+                refreshChamp();
+            }
+            requestFocus();
+        }
+    }
+
+    private class DeleteListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == delete && allProfils.size() > 1) {
+                allProfils.remove(indProf);
+                currentProf = allProfils.get(0);
+                indProf = 0;
                 Utils.writeJson(allProfils, Utils.profilFilename);
                 refreshChamp();
             }
