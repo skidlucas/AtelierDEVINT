@@ -234,7 +234,8 @@ public abstract class MenuAbstrait extends DevintFrameListener implements
 				optionCourante = (optionCourante + 1) % nbOption;
 				setFocusedButton(optionCourante);
 			}
-		}
+            voix.playText(nomOptions[optionCourante]);
+        }
 		// se déplacer dans les options vers le haut
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			if (optionCourante == -1) {
@@ -247,8 +248,9 @@ public abstract class MenuAbstrait extends DevintFrameListener implements
 					optionCourante = nbOption - 1;
 				setFocusedButton(optionCourante);
 			}
-		}
-	}
+            voix.playText(nomOptions[optionCourante]);
+        }
+    }
 
 	// activer l'option si clic sur le bouton
 	public void actionPerformed(ActionEvent ae) {

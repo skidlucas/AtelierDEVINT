@@ -33,7 +33,7 @@ public class PresJeuMulti extends FenetreAbstraite implements ActionListener {
             super(title);
             init();
             voix.stop();
-            voix.playText("Mode Multijoueur. Choisissez les profils des deux joueurs.");
+            voix.playText("Mode Multijoueur. Choisissez le thème et les profils des deux joueurs à l'aide de la souris.");
         }
 
     // renvoie le fichier wave contenant le message d'accueil
