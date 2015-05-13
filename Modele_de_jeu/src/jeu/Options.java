@@ -316,12 +316,15 @@ public class Options extends FenetreAbstraite{
                 Profil tmp = new Profil(fieldNom.getText(),
                         couleur.getSelectedItem().toString(),
                         taille.getSelectedItem().toString());
-
-                allProfils.remove(indProf);
-                allProfils.add(tmp);
-                currentProf = tmp;
-                indProf = allProfils.size() - 1;
-                Utils.writeJson(allProfils, Utils.profilFilename);
+                if(nameIsInProfils(tmp.getName())){
+                    voix.playText("Un profil existe déjà avec ce nom, veuillez saisir un autre nom");
+                } else {
+                    allProfils.remove(indProf);
+                    allProfils.add(tmp);
+                    currentProf = tmp;
+                    indProf = allProfils.size() - 1;
+                    Utils.writeJson(allProfils, Utils.profilFilename);
+                }
                 refreshChamp();
             } else {
                 dispose();
@@ -352,6 +355,7 @@ public class Options extends FenetreAbstraite{
     }
 
     private class DeleteListener implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == delete && allProfils.size() > 1) {
                 allProfils.remove(indProf);
