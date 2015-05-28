@@ -212,10 +212,6 @@ public class Options extends FenetreAbstraite{
         lCouleur.setFont(f);
         lTaille.setFont(f);
         lNom.setFont(f);
-        addButton.setFont(f);
-        delete.setFont(f);
-        save.setFont(f);
-        quit.setFont(f);
         couleur.setFont(f);
         taille.setFont(f);
         fieldNom.setFont(f);
